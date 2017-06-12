@@ -1,25 +1,30 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for `logzero` package."""
+"""
+test_logzero
+----------------------------------
+
+Tests for `log0` module.
+"""
 
 import pytest
+import tempfile
+
+from logzero import setup_logger
 
 
-from logzero import logzero
-
-
-@pytest.fixture
-def response():
-    """Sample pytest fixture.
-
-    See more at: http://doc.pytest.org/en/latest/fixture.html
+def test_write_to_logfile():
+    """Sample pytest test function with the pytest fixture as an argument.
     """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logger = setup_logger(logfile=temp.name)
+        logger.info("test log output")
 
+        with open(temp.name) as f:
+            content = f.read()
+            assert content.endswith("test log output\n")
 
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
+    finally:
+        temp.close()
