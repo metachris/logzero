@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-This helper provides a versatile yet easy to use and beautiful
-logging setup. You can use it to log to the console and optionally
-to a logfile.
+This helper provides a versatile yet easy to use and beautiful logging setup.
+You can use it to log to the console and optionally to a logfile. This propject
+is heavily inspired by the Tornado web framework.
 
-The formatter is heavily inspired by the Tornado web framework,
-licensed under the Apache 2.0 license.
+* https://logzero.readthedocs.io
+* https://github.com/metachris/logzero
 
 The call `logger.info("hello")` prints log messages in this format:
 
@@ -49,12 +49,28 @@ else:
     basestring_type = basestring  # noqa
 
 
-def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=None):
+def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
     """
     A utility function that you can call to easily set up logging to the
     console and optionally to a file. No hassles.
+
+    Source code: https://github.com/metachris/logzero/blob/master/logzero/__init__.py#L52
+
+    Usage:
+
+    .. code-block:: python
+
+        from logzero import setup_logger
+        logger = setup_logger()
+        logger.info("hello")
+
+    :arg string name: Name of the `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_. Multiple calls to `setup_logger()` with the same name will always return a reference to the same Logger object. (defaut: `__name__`)
+    :arg string logfile: If set, also write logs to the specified filename.
+    :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `logging.DEBUG`).
+    :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
+    :return: A fully configured Python logging `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_ you can use with `.debug("msg")`, etc.
     """
-    logger = logging.getLogger(name)
+    logger = logging.getLogger(name or __name__)
     logger.propagate = False
     logger.setLevel(level)
 
@@ -76,7 +92,7 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
 
     if logfile:
         filehandler = logging.FileHandler(logfile)
-        filehandler.setLevel(logging.NOTSET)
+        filehandler.setLevel(level)
         filehandler.setFormatter(formatter)
         logger.addHandler(filehandler)
 
@@ -119,6 +135,7 @@ class LogFormatter(logging.Formatter):
            Added ``fmt`` and ``datefmt`` arguments.
         """
         logging.Formatter.__init__(self, datefmt=datefmt)
+
         self._fmt = fmt
 
         self._colors = {}

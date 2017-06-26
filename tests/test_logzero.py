@@ -5,13 +5,10 @@
 test_logzero
 ----------------------------------
 
-Tests for `log0` module.
+Tests for `logzero` module.
 """
-
-import pytest
 import tempfile
-
-from logzero import setup_logger
+import logzero
 
 
 def test_write_to_logfile():
@@ -19,11 +16,30 @@ def test_write_to_logfile():
     """
     temp = tempfile.NamedTemporaryFile()
     try:
-        logger = setup_logger(logfile=temp.name)
+        logger = logzero.setup_logger(logfile=temp.name)
         logger.info("test log output")
 
         with open(temp.name) as f:
             content = f.read()
+            assert " test_logzero:" in content
+            assert content.endswith("test log output\n")
+
+    finally:
+        temp.close()
+
+def test_custom_formatter():
+    """Sample pytest test function with the pytest fixture as an argument.
+    """
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        log_format = '%(color)s[%(levelname)1.1s %(asctime)s customnametest:%(lineno)d]%(end_color)s %(message)s'
+        formatter = logzero.LogFormatter(fmt=log_format)
+        logger = logzero.setup_logger(logfile=temp.name, formatter=formatter)
+        logger.info("test log output")
+
+        with open(temp.name) as f:
+            content = f.read()
+            assert " customnametest:" in content
             assert content.endswith("test log output\n")
 
     finally:

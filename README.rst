@@ -20,15 +20,40 @@ logzero
 
 Python logging made easy
 
-
-* Free software: MIT license
+* GitHub repository: https://github.com/metachris/logzero.
 * Documentation: https://logzero.readthedocs.io.
 
 
 Features
 --------
 
-* TODO
+* Easy logging to console and/or file.
+* Pretty formatting, including level-specific colors in the console.
+* Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
+* All contained in a `single file`_.
+* Licensed under the MIT license.
+* Heavily inspired by the `Tornado web framework`_.
+* Hosted on GitHub: https://github.com/metachris/logzero
+
+
+Example Usage
+-------------
+
+    from logzero import setup_logger
+    logger = setup_logger()
+    logger.info("hello")
+
+
+Take a look at the documentation for more information and examples:
+
+* Documentation: https://logzero.readthedocs.io.
+
+
+Notes
+-----
+
+* https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checklist.html
+
 
 Credits
 ---------
