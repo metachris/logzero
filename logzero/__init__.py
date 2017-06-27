@@ -28,7 +28,7 @@ parameter `level`.
 
 __author__ = """Chris Hager"""
 __email__ = 'chris@linuxuser.at'
-__version__ = '0.2.0'
+__version__ = '1.0.0'
 
 import sys
 import logging
