@@ -20,7 +20,7 @@ logzero
 
 Robust and effective logging for Python 2 and 3.
 
-.. image:: docs/_static/logo.png
+.. image:: docs/_static/logo-small.png
    :alt: Logo
    :width: 300px
 

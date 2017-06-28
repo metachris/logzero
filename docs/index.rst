@@ -7,7 +7,7 @@
 
 Robust and effective logging for Python 2 and 3.
 
-.. image:: _static/logo.png
+.. image:: _static/logo-small.png
    :alt: Logo
    :width: 300px
 
