@@ -5,11 +5,18 @@
 `logzero`: Python logging made easy
 ===================================
 
-`logzero` is a simple and effective logging module for Python 2 and 3.
+Robust and effective logging for Python 2 and 3.
+
+.. image:: _static/logo.png
+   :alt: Logo
+   :width: 300px
+
+**Features**
 
 * Easy logging to console and/or file.
 * Pretty formatting, including level-specific colors in the console.
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
+* Compatible with Python 2 and 3.
 * All contained in a `single file`_.
 * Licensed under the MIT license.
 * Heavily inspired by the `Tornado web framework`_.
@@ -33,7 +40,7 @@ You can also install `logzero` from the public `Github repo`_:
 
 .. code-block:: console
 
-    $ git clone git://github.com/metachris/logzero
+    $ git clone https://github.com/metachris/logzero.git
     $ cd logzero
     $ python setup.py install
 
@@ -41,6 +48,8 @@ You can also install `logzero` from the public `Github repo`_:
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 .. _Github repo: https://github.com/metachris/logzero
 .. _tarball: https://github.com/metachris/logzero/tarball/master
+.. _single file: https://github.com/metachris/logzero/blob/master/logzero/__init__.py
+.. _Tornado web framework: https://github.com/tornadoweb/tornado
 
 
 Example Usage
@@ -53,26 +62,40 @@ You can use `logzero` like this:
     from logzero import setup_logger
     logger = setup_logger()
 
-    ...
+    logger.debug("hello")
+    logger.info("info")
+    logger.warn("warn")
+    logger.error("error")
 
-    logger.info("hello")
+If `logger.info(..)` was called from a file called `demo.py`, the output will look like this:
 
-If `logger.info(..)` was called from a file called `test.py` in line 101, the output will look like this:
+.. image:: _static/demo_output.png
+   :alt: Demo output in color
 
 .. code-block:: console
 
-    [I 170213 15:02:00 test:101] hello
+    [D 170628 09:30:53 demo:4] hello
+    [I 170628 09:30:53 demo:5] info
+    [W 170628 09:30:53 demo:6] warn
+    [E 170628 09:30:53 demo:7] error
 
+You can also easily log to a file as well:
 
-.. _single file: https://github.com/metachris/logzero/blob/master/logzero/__init__.py
-.. _Tornado web framework: https://github.com/tornadoweb/tornado
+.. code-block:: python
 
-You can easily log variables too:
+    logger = setup_logger(logfile="/tmp/test.log")
+
+This is how you can log variables too:
 
 .. code-block:: python
 
     logger.debug("var1: %s, var2: %s", var1, var2)
 
+This is how you can set the minimum logging level to `INFO` (default is `DEBUG`):
+
+.. code-block:: python
+
+    setup_logger(level=logging.INFO)
 
 
 Documentation

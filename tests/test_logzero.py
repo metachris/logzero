@@ -7,12 +7,15 @@ test_logzero
 
 Tests for `logzero` module.
 """
+import os
 import tempfile
+import logging
 import logzero
 
 
 def test_write_to_logfile():
-    """Sample pytest test function with the pytest fixture as an argument.
+    """
+    Should log to a file.
     """
     temp = tempfile.NamedTemporaryFile()
     try:
@@ -28,7 +31,8 @@ def test_write_to_logfile():
         temp.close()
 
 def test_custom_formatter():
-    """Sample pytest test function with the pytest fixture as an argument.
+    """
+    Should work with a custom formatter.
     """
     temp = tempfile.NamedTemporaryFile()
     try:
@@ -41,6 +45,41 @@ def test_custom_formatter():
             content = f.read()
             assert " customnametest:" in content
             assert content.endswith("test log output\n")
+
+    finally:
+        temp.close()
+
+def test_loglevel():
+    """
+    Should not log any debug messages if minimum level is set to INFO
+    """
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logger = logzero.setup_logger(logfile=temp.name, level=logging.INFO)
+        logger.debug("test log output")
+
+        with open(temp.name) as f:
+            content = f.read()
+            assert len(content.strip()) == 0
+
+    finally:
+        temp.close()
+
+def test_bytes():
+    """
+    Should properly log bytes
+    """
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logger = logzero.setup_logger(logfile=temp.name)
+
+        testbytes = os.urandom(20)
+        logger.debug(testbytes)
+        logger.debug(None)
+
+        with open(temp.name) as f:
+            content = f.read()
+            # assert str(testbytes) in content
 
     finally:
         temp.close()

@@ -18,7 +18,11 @@ logzero
      :alt: Updates
 
 
-Python logging made easy
+Robust and effective logging for Python 2 and 3.
+
+.. image:: docs/_static/logo.png
+   :alt: Logo
+   :width: 300px
 
 * GitHub repository: https://github.com/metachris/logzero.
 * Documentation: https://logzero.readthedocs.io.
@@ -30,10 +34,10 @@ Features
 * Easy logging to console and/or file.
 * Pretty formatting, including level-specific colors in the console.
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
+* Compatible with Python 2 and 3.
 * All contained in a `single file`_.
 * Licensed under the MIT license.
 * Heavily inspired by the `Tornado web framework`_.
-* Hosted on GitHub: https://github.com/metachris/logzero
 
 
 Example Usage
