@@ -2,6 +2,12 @@
 History
 =======
 
+1.2.1 (2017-07-09)
+------------------
+
+* Logfiles with custom loglevels (eg. stream handler with DEBUG and file handler with ERROR).
+
+
 1.2.0 (2017-07-05)
 ------------------
 
