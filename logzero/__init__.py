@@ -25,17 +25,16 @@ In order to also log to a file, just add a `logfile` parameter:
 The default loglevel is `logging.DEBUG`. You can set it with the
 parameter `level`.
 """
-
-__author__ = """Chris Hager"""
-__email__ = 'chris@linuxuser.at'
-__version__ = '1.0.0'
-
 import sys
 import logging
 try:
     import curses  # type: ignore
 except ImportError:
     curses = None
+
+__author__ = """Chris Hager"""
+__email__ = 'chris@linuxuser.at'
+__version__ = '1.0.0'
 
 # Python 2+3 compatibility settings for logger
 bytes_type = bytes

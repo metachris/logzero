@@ -24,8 +24,8 @@ Robust and effective logging for Python 2 and 3.
    :alt: Logo
    :width: 300px
 
-* GitHub repository: https://github.com/metachris/logzero.
-* Documentation: https://logzero.readthedocs.io.
+* GitHub repository: https://github.com/metachris/logzero
+* Documentation: https://logzero.readthedocs.io
 
 
 Features

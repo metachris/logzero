@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 """
 test_logzero
 ----------------------------------
@@ -30,6 +29,7 @@ def test_write_to_logfile():
     finally:
         temp.close()
 
+
 def test_custom_formatter():
     """
     Should work with a custom formatter.
@@ -49,6 +49,7 @@ def test_custom_formatter():
     finally:
         temp.close()
 
+
 def test_loglevel():
     """
     Should not log any debug messages if minimum level is set to INFO
@@ -65,6 +66,7 @@ def test_loglevel():
     finally:
         temp.close()
 
+
 def test_bytes():
     """
     Should properly log bytes
@@ -77,9 +79,9 @@ def test_bytes():
         logger.debug(testbytes)
         logger.debug(None)
 
-        with open(temp.name) as f:
-            content = f.read()
-            # assert str(testbytes) in content
+        # with open(temp.name) as f:
+        #     content = f.read()
+        #     # assert str(testbytes) in content
 
     finally:
         temp.close()
