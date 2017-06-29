@@ -7,5 +7,5 @@ coverage==4.1
 Sphinx==1.6.2
 cryptography==1.7
 PyYAML==3.11
-pytest==2.9.2
+pytest==3.1.2
 pytest-runner==2.11.1
