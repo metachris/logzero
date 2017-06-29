@@ -53,6 +53,22 @@ Take a look at the documentation for more information and examples:
 * Documentation: https://logzero.readthedocs.io.
 
 
+Future Features & Ideas
+-----------------------
+
+* JSON output a la 12 factor app
+* Send logs to remote log collector (maybe)
+* Structured logging a la https://structlog.readthedocs.io/en/stable/index.html (maybe)
+
+
+Related Projects
+----------------
+
+* https://structlog.readthedocs.io/en/stable/why.html
+* https://12factor.net/logs
+* fluentd, logstash
+
+
 Notes
 -----
 

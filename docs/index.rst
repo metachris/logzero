@@ -71,6 +71,7 @@ If `logger.info(..)` was called from a file called `demo.py`, the output will lo
 
 .. image:: _static/demo_output.png
    :alt: Demo output in color
+   :width: 300px
 
 .. code-block:: console
 
