@@ -50,8 +50,9 @@ else:
 
 def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
     """
-    A utility function that you can call to easily set up logging to the
-    console and optionally to a file. No hassles.
+    A utility function that returns you a fully configured logger instance. No hassles.
+    If a logger with the specified name already exists, it returns the existing instance,
+    else creates a new one.
 
     Source code: https://github.com/metachris/logzero/blob/master/logzero/__init__.py#L52
 
@@ -241,6 +242,32 @@ def _safe_unicode(s):
         return to_unicode(s)
     except UnicodeDecodeError:
         return repr(s)
+
+
+logger = setup_logger(name="_logzero_default")
+
+
+def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None):
+    """
+    Works just like `setup_logger(..)` but globally reconfigures the default `logzero.logger`
+    instance.
+
+    Usage:
+
+    .. code-block:: python
+
+        from logzero import logger, setup_default_logger
+        setup_logger(level=logging.WARN)
+        logger.info("hello")
+
+    :arg string name: Name of the `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_. Multiple calls to `setup_logger()` with the same name will always return a reference to the same Logger object. (defaut: `__name__`)
+    :arg string logfile: If set, also write logs to the specified filename.
+    :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `logging.DEBUG`).
+    :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
+    :return: The fully reconfigured global logzero default `logger instance <https://docs.python.org/2/library/logging.html#logger-objects>`_ you can use with `.debug("msg")`, etc.
+    """
+    logger = setup_logger(name="_logzero_default", logfile=logfile, level=level, formatter=formatter)
+    return logger
 
 
 if __name__ == "__main__":

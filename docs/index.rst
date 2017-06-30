@@ -56,19 +56,18 @@ You can also install `logzero` from the public `Github repo`_:
 Example Usage
 =============
 
-You can use `logzero` like this:
+You can use `logzero` with the default `logger` like this:
 
 .. code-block:: python
 
-    from logzero import setup_logger
-    logger = setup_logger()
+    from logzero import logger
 
     logger.debug("hello")
     logger.info("info")
     logger.warn("warn")
     logger.error("error")
 
-If `logger.info(..)` was called from a file called `demo.py`, the output will look like this:
+If this was a file called `demo.py`, the output will look like this:
 
 .. image:: _static/demo_output.png
    :alt: Demo output in color
@@ -81,8 +80,23 @@ If `logger.info(..)` was called from a file called `demo.py`, the output will lo
     [W 170628 09:30:53 demo:6] warn
     [E 170628 09:30:53 demo:7] error
 
+
+You can also setup a specific `logger` with various options:
+
+.. code-block:: python
+
+    from logzero import setup_logger
+    logger = setup_logger(logfile=None, level=logging.WARN)
+
+    logger.debug("hello")
+    logger.info("info")
+    logger.warn("warn")
+    logger.error("error")
+
+
 Logging to a logfile
-^^^^^^^^^^^^^^^^^^^^
+------------------
+
 
 You can also easily log to a file as well:
 
@@ -94,7 +108,8 @@ You can also easily log to a file as well:
 
 
 Logging variables
-^^^^^^^^^^^^^^^^^
+------------------
+
 
 This is how you can log variables too:
 
@@ -102,8 +117,10 @@ This is how you can log variables too:
 
     logger.debug("var1: %s, var2: %s", var1, var2)
 
+
 Setting the minimum loglevel
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+------------------
+
 
 You can set the minimum logging level to any of the standard `Python log levels <https://docs.python.org/2/library/logging.html#logging-levels>`_.
 For instance if you want to set the minimum logging level to `INFO` (default is `DEBUG`):
@@ -116,10 +133,37 @@ For instance if you want to set the minimum logging level to `INFO` (default is 
 Documentation
 =================
 
-`setup_logger(..)`
+`logzero.logger`
+------------------
+
+`logzero.logger` is an already set up `logger instance <https://docs.python.org/2/library/logging.html#module-level-functions>`_ for your convenience. You can use it from all your
+files and modules directly like this:
+
+.. code-block:: python
+
+    from logzero import logger
+
+    logger.debug("hello")
+    logger.info("info")
+    logger.warn("warn")
+    logger.error("error")
+
+You can reconfigure the default logger globally with `logzero.setup_default_logger(..)`.
+
+.. autodata:: logzero.logger
+
+
+
+`logzero.setup_logger(..)`
 ------------------
 
 .. autofunction:: logzero.setup_logger
+
+
+`logzero.setup_default_logger(..)`
+------------------
+
+.. autofunction:: logzero.setup_default_logger
 
 
 Default Log Format

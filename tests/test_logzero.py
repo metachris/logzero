@@ -110,3 +110,38 @@ def test_multiple_loggers_one_logfile():
 
     finally:
         temp.close()
+
+
+def test_default_logger():
+    """
+    Default logger should work and be able to be reconfigured.
+    """
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logzero.setup_default_logger(logfile=temp.name)
+        logzero.logger.debug("debug1")  # will be logged
+
+        # Setup with loglevel INFO
+        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO)
+        logzero.logger.debug("debug2")  # will not be logged
+
+        logzero.logger.info("info1")  # will be logged
+
+        # Setup a different formatter
+        log_format = '%(color)s[xxx]%(end_color)s %(message)s'
+        formatter = logzero.LogFormatter(fmt=log_format)
+        logger = logzero.setup_default_logger(logfile=temp.name, level=logging.INFO, formatter=formatter)
+
+        logzero.logger.info("info2")  # will be logged with new formatter
+        logzero.logger.debug("debug3")  # will not be logged
+
+        with open(temp.name) as f:
+            content = f.read()
+            assert "] debug1" in content
+            assert "] debug2" not in content
+            assert "] info1" in content
+            assert "xxx] info2" in content
+            assert "] debug3" not in content
+
+    finally:
+        temp.close()
