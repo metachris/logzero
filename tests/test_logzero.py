@@ -86,6 +86,7 @@ def test_bytes():
     finally:
         temp.close()
 
+
 def test_multiple_loggers_one_logfile():
     """
     Should properly log bytes
