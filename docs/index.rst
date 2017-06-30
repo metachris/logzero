@@ -16,6 +16,7 @@ Robust and effective logging for Python 2 and 3.
 * Easy logging to console and/or file.
 * Pretty formatting, including level-specific colors in the console.
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
+* Multiple loggers (also across multiple files) can write to the same logfile.
 * Compatible with Python 2 and 3.
 * All contained in a `single file`_.
 * Licensed under the MIT license.
@@ -80,11 +81,20 @@ If `logger.info(..)` was called from a file called `demo.py`, the output will lo
     [W 170628 09:30:53 demo:6] warn
     [E 170628 09:30:53 demo:7] error
 
+Logging to a logfile
+^^^^^^^^^^^^^^^^^^^^
+
 You can also easily log to a file as well:
 
 .. code-block:: python
 
     logger = setup_logger(logfile="/tmp/test.log")
+
+`logzero` supports multiple loggers writing to the same logfile. On every call of `setup_logger(..)`, simply supply the same filename as `logfile` parameter.
+
+
+Logging variables
+^^^^^^^^^^^^^^^^^
 
 This is how you can log variables too:
 
@@ -92,7 +102,11 @@ This is how you can log variables too:
 
     logger.debug("var1: %s, var2: %s", var1, var2)
 
-This is how you can set the minimum logging level to `INFO` (default is `DEBUG`):
+Setting the minimum loglevel
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can set the minimum logging level to any of the standard `Python log levels <https://docs.python.org/2/library/logging.html#logging-levels>`_.
+For instance if you want to set the minimum logging level to `INFO` (default is `DEBUG`):
 
 .. code-block:: python
 

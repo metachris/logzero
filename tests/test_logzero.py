@@ -85,3 +85,27 @@ def test_bytes():
 
     finally:
         temp.close()
+
+def test_multiple_loggers_one_logfile():
+    """
+    Should properly log bytes
+    """
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logger1 = logzero.setup_logger(name="logger1", logfile=temp.name)
+        logger2 = logzero.setup_logger(name="logger2", logfile=temp.name)
+        logger3 = logzero.setup_logger(name="logger3", logfile=temp.name)
+
+        logger1.info("logger1")
+        logger2.info("logger2")
+        logger3.info("logger3")
+
+        with open(temp.name) as f:
+            content = f.read().strip()
+            assert "logger1" in content
+            assert "logger2" in content
+            assert "logger3" in content
+            assert len(content.split("\n")) == 3
+
+    finally:
+        temp.close()

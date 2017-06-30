@@ -34,6 +34,7 @@ Features
 * Easy logging to console and/or file.
 * Pretty formatting, including level-specific colors in the console.
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
+* Multiple loggers (also across multiple files) can write to the same logfile.
 * Compatible with Python 2 and 3.
 * All contained in a `single file`_.
 * Licensed under the MIT license.
