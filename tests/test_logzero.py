@@ -130,7 +130,7 @@ def test_default_logger():
         # Setup a different formatter
         log_format = '%(color)s[xxx]%(end_color)s %(message)s'
         formatter = logzero.LogFormatter(fmt=log_format)
-        logger = logzero.setup_default_logger(logfile=temp.name, level=logging.INFO, formatter=formatter)
+        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO, formatter=formatter)
 
         logzero.logger.info("info2")  # will be logged with new formatter
         logzero.logger.debug("debug3")  # will not be logged
