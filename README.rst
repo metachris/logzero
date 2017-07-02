@@ -69,6 +69,16 @@ Take a look at the documentation for more information and examples:
 * Documentation: https://logzero.readthedocs.io.
 
 
+Installation
+=============
+
+Install `logzero` with `pip`_:
+
+.. code-block:: console
+
+    $ pip install -U logzero
+
+
 Future Features & Ideas
 -----------------------
 

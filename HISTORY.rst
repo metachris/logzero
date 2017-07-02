@@ -2,6 +2,14 @@
 History
 =======
 
+1.1.0 (2017-07-02)
+------------------
+
+* Global default logger instance (`logzero.logger`)
+* Ability to reconfigure the default logger with (`logzero.setup_default_logger(..)`)
+* More tests
+* More documentation
+
 1.0.0 (2017-06-27)
 ------------------
 
