@@ -87,6 +87,24 @@ def test_bytes():
         temp.close()
 
 
+def test_unicode():
+    """
+    Should log unicode
+    """
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logger = logzero.setup_logger(logfile=temp.name)
+
+        logger.debug("😄 😁 😆 😅 😂")
+
+        with open(temp.name, "rb") as f:
+            content = f.read()
+            assert "\\xf0\\x9f\\x98\\x84 \\xf0\\x9f\\x98\\x81 \\xf0\\x9f\\x98\\x86 \\xf0\\x9f\\x98\\x85 \\xf0\\x9f\\x98\\x82\\n" in repr(content)
+
+    finally:
+        temp.close()
+
+
 def test_multiple_loggers_one_logfile():
     """
     Should properly log bytes
