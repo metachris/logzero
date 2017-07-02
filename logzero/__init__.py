@@ -13,17 +13,21 @@ The call `logger.info("hello")` prints log messages in this format:
 
 Usage:
 
-    from logzero import setup_logger
+    from logzero import logger
 
-    logger = setup_logger()
-    logger.info("message")
+    logger.debug("hello")
+    logger.info("info")
+    logger.warn("warn")
+    logger.error("error")
 
 In order to also log to a file, just add a `logfile` parameter:
 
-    logger = setup_logger(logfile="/tmp/test.log")
+    logger = logzero.setup_default_logger(logfile="/tmp/test.log")
 
 The default loglevel is `logging.DEBUG`. You can set it with the
 parameter `level`.
+
+See also https://logzero.readthedocs.io for more information.
 """
 import sys
 import logging
@@ -50,11 +54,9 @@ else:
 
 def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
     """
-    A utility function that returns you a fully configured logger instance. No hassles.
+    Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
     else creates a new one.
-
-    Source code: https://github.com/metachris/logzero/blob/master/logzero/__init__.py#L52
 
     Usage:
 
@@ -257,10 +259,9 @@ def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None):
     .. code-block:: python
 
         from logzero import logger, setup_default_logger
-        setup_logger(level=logging.WARN)
+        setup_default_logger(level=logging.WARN)
         logger.info("hello")
 
-    :arg string name: Name of the `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_. Multiple calls to `setup_logger()` with the same name will always return a reference to the same Logger object. (defaut: `__name__`)
     :arg string logfile: If set, also write logs to the specified filename.
     :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `logging.DEBUG`).
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).

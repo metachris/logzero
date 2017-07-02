@@ -32,17 +32,30 @@ Features
 --------
 
 * Easy logging to console and/or file.
+* Provides a fully configured standard `Python logger object <https://docs.python.org/2/library/logging.html#module-level-functions>`_.
 * Pretty formatting, including level-specific colors in the console.
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
-* Multiple loggers (also across multiple files) can write to the same logfile.
+* Multiple loggers can write to the same logfile (also across multiple Python files).
+* Global default logger with `logzero.logger` and custom loggers with `logzero.setup_logger(..)`.
 * Compatible with Python 2 and 3.
 * All contained in a `single file`_.
 * Licensed under the MIT license.
 * Heavily inspired by the `Tornado web framework`_.
 
 
+.. image:: docs/_static/demo_output.png
+   :alt: Demo output in color
+   :width: 300px
+
+
+.. _single file: https://github.com/metachris/logzero/blob/master/logzero/__init__.py
+.. _Tornado web framework: https://github.com/tornadoweb/tornado
+
+
 Example Usage
 -------------
+
+.. code-block:: python
 
     from logzero import setup_logger
     logger = setup_logger()
@@ -57,6 +70,7 @@ Take a look at the documentation for more information and examples:
 Future Features & Ideas
 -----------------------
 
+* Rotating Logfiles
 * JSON output a la 12 factor app
 * Send logs to remote log collector (maybe)
 * Structured logging a la https://structlog.readthedocs.io/en/stable/index.html (maybe)

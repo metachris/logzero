@@ -14,15 +14,21 @@ Robust and effective logging for Python 2 and 3.
 **Features**
 
 * Easy logging to console and/or file.
+* Provides a fully configured standard `Python logger object <https://docs.python.org/2/library/logging.html#module-level-functions>`_.
 * Pretty formatting, including level-specific colors in the console.
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
-* Multiple loggers (also across multiple files) can write to the same logfile.
+* Multiple loggers can write to the same logfile (also works across multiple Python files).
+* Global default logger with `logzero.logger <#i-logzero-logger>`_ and custom loggers with `logzero.setup_logger(..) <#i-logzero-setup-logger>`_.
 * Compatible with Python 2 and 3.
 * All contained in a `single file`_.
 * Licensed under the MIT license.
 * Heavily inspired by the `Tornado web framework`_.
 * Hosted on GitHub: https://github.com/metachris/logzero
 
+
+.. image:: _static/demo_output.png
+   :alt: Demo output in color
+   :width: 300px
 
 
 Installation
@@ -81,12 +87,17 @@ If this was a file called `demo.py`, the output will look like this:
     [E 170628 09:30:53 demo:7] error
 
 
-You can also setup a specific `logger` with various options:
+You can reconfigure the global default logger with `logzero.setup_default_logger(..) <#i-logzero-setup-default-logger>`_, to set a
+logfile, minimum loglevel or a custom formatter.
+
+------------
+
+Instead of using the default logger you can also setup a specific `logger` object with `logzero.setup_logger(..) <#i-logzero-setup-logger>`_:
 
 .. code-block:: python
 
     from logzero import setup_logger
-    logger = setup_logger(logfile=None, level=logging.WARN)
+    logger = setup_logger(logfile="/tmp/test.log", level=logging.WARN)
 
     logger.debug("hello")
     logger.info("info")
@@ -97,14 +108,21 @@ You can also setup a specific `logger` with various options:
 Logging to a logfile
 ------------------
 
+You can also easily setup logging to a logfile by supplying the `logfile` attribute.
+`logzero` supports multiple loggers writing to the same logfile, even across multiple Python files.
 
-You can also easily log to a file as well:
+
+You can set the logfile for the global default logger with `logzero.setup_default_logger(..) <#i-logzero-setup-default-logger>`_ like this:
+
+.. code-block:: python
+
+    logzero.setup_default_logger(logfile="/tmp/test.log")
+
+To configure a specific logger instance use `logzero.setup_logger(..) <#i-logzero-setup-logger>`_:
 
 .. code-block:: python
 
     logger = setup_logger(logfile="/tmp/test.log")
-
-`logzero` supports multiple loggers writing to the same logfile. On every call of `setup_logger(..)`, simply supply the same filename as `logfile` parameter.
 
 
 Logging variables
@@ -133,10 +151,12 @@ For instance if you want to set the minimum logging level to `INFO` (default is 
 Documentation
 =================
 
+.. _i-logzero-logger:
+
 `logzero.logger`
 ------------------
 
-`logzero.logger` is an already set up `logger instance <https://docs.python.org/2/library/logging.html#module-level-functions>`_ for your convenience. You can use it from all your
+`logzero.logger` is an already set up standard `Python logger instance <https://docs.python.org/2/library/logging.html#module-level-functions>`_ for your convenience. You can use it from all your
 files and modules directly like this:
 
 .. code-block:: python
@@ -148,17 +168,18 @@ files and modules directly like this:
     logger.warn("warn")
     logger.error("error")
 
-You can reconfigure the default logger globally with `logzero.setup_default_logger(..)`.
+You can reconfigure the default logger globally with `logzero.setup_default_logger(..) <#i-logzero-setup-default-logger>`_.
 
-.. autodata:: logzero.logger
+See the documentation for the `Python logger instance <https://docs.python.org/2/library/logging.html#module-level-functions>`_ for more information about how you can use it.
 
-
+.. _i-logzero-setup-logger:
 
 `logzero.setup_logger(..)`
 ------------------
 
 .. autofunction:: logzero.setup_logger
 
+.. _i-logzero-setup-default-logger:
 
 `logzero.setup_default_logger(..)`
 ------------------
@@ -195,7 +216,7 @@ This is a working example on how to setup logging with a custom format:
 
     log_format = '%(color)s[%(levelname)1.1s %(asctime)s %(module)s:%(lineno)d]%(end_color)s %(message)s'
     formatter = logzero.LogFormatter(fmt=log_format)
-    logger = logzero.setup_logger(formatter=formatter)
+    logzero.setup_default_logger(formatter=formatter)
 
 
 Issues, Feedback & Contributions
