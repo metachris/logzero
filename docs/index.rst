@@ -122,7 +122,7 @@ To configure a specific logger instance use `logzero.setup_logger(..) <#i-logzer
 
 .. code-block:: python
 
-    logger = setup_logger(logfile="/tmp/test.log")
+    logger = logzero.setup_logger(logfile="/tmp/test.log")
 
 
 Logging variables
