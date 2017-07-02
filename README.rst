@@ -57,10 +57,12 @@ Example Usage
 
 .. code-block:: python
 
-    from logzero import setup_logger
-    logger = setup_logger()
-    logger.info("hello")
+    from logzero import logger
 
+    logger.debug("hello")
+    logger.info("info")
+    logger.warn("warn")
+    logger.error("error")
 
 Take a look at the documentation for more information and examples:
 
