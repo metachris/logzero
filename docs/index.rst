@@ -137,8 +137,7 @@ This is how you can log variables too:
 
 
 Setting the minimum loglevel
-------------------
-
+----------------------------
 
 You can set the minimum logging level to any of the standard `Python log levels <https://docs.python.org/2/library/logging.html#logging-levels>`_.
 For instance if you want to set the minimum logging level to `INFO` (default is `DEBUG`):
@@ -146,6 +145,32 @@ For instance if you want to set the minimum logging level to `INFO` (default is 
 .. code-block:: python
 
     setup_logger(level=logging.INFO)
+
+
+Adding custom handlers (eg. RotatingLogFile)
+--------------------------------------------
+
+Since `logzero` uses the standard `Python logger object <https://docs.python.org/2/library/logging.html#module-level-functions>`_,
+you can attach any `Python logging handlers <https://docs.python.org/2/library/logging.handlers.html>`_ you can imagine!
+
+This is how you add a `RotatingFileHandler <https://docs.python.org/2/library/logging.handlers.html#rotatingfilehandler>`_:
+
+.. code-block:: python
+
+    import logzero
+    import logging
+    from logging.handlers import RotatingFileHandler
+
+    # Setup the RotatingFileHandler
+    rotating_file_handler = RotatingFileHandler("/tmp/app-rotating.log", maxBytes=100000, backupCount=2)
+    rotating_file_handler.setLevel(logging.DEBUG)
+    rotating_file_handler.setFormatter(logzero.LogFormatter())
+
+    # Attach it to the logzero default logger
+    logzero.logger.addHandler(rotating_file_handler)
+
+    # Log stuff
+    logzero.logger.info("this is a test")
 
 
 Documentation
