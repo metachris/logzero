@@ -21,6 +21,7 @@ Robust and effective logging for Python 2 and 3.
 * Global default logger with `logzero.logger <#i-logzero-logger>`_ and custom loggers with `logzero.setup_logger(..) <#i-logzero-setup-logger>`_.
 * Compatible with Python 2 and 3.
 * All contained in a `single file`_.
+* No further Python dependencies.
 * Licensed under the MIT license.
 * Heavily inspired by the `Tornado web framework`_.
 * Hosted on GitHub: https://github.com/metachris/logzero

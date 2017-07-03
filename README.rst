@@ -39,6 +39,7 @@ Features
 * Global default logger with `logzero.logger` and custom loggers with `logzero.setup_logger(..)`.
 * Compatible with Python 2 and 3.
 * All contained in a `single file`_.
+* No further Python dependencies.
 * Licensed under the MIT license.
 * Heavily inspired by the `Tornado web framework`_.
 
@@ -101,6 +102,8 @@ Notes: How to release a new version
 
 via https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checklist.html
 
+.. code-block:: console
+
     # Run the tests
     py.test
     make lint
@@ -125,3 +128,5 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 
+
+.. _pip: https://pip.pypa.io
