@@ -86,8 +86,7 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
 
     # add the formatter to the handler
     # formatter = logging.Formatter('%(name)s - %(asctime)-15s - %(levelname)s: %(message)s');
-    formatter = formatter or LogFormatter()
-    stream_handler.setFormatter(formatter)
+    stream_handler.setFormatter(formatter or LogFormatter())
 
     # setup logger and add the handlers
     logger.addHandler(stream_handler)
@@ -95,7 +94,7 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
     if logfile:
         filehandler = logging.FileHandler(logfile)
         filehandler.setLevel(level)
-        filehandler.setFormatter(formatter)
+        filehandler.setFormatter(formatter or LogFormatter(color=False))
         logger.addHandler(filehandler)
 
     # logger.debug("logger set up. level=%d", level)
