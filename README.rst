@@ -96,10 +96,25 @@ Related Projects
 * fluentd, logstash
 
 
-Notes
------
+Notes: How to release a new version
+-----------------------------------
 
-* https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checklist.html
+via https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checklist.html
+
+    # Run the tests
+    py.test
+    make lint
+
+    # Update history
+    vi HISTORY.rst
+    git add HISTORY.rst
+    git commit -m "Changelog for upcoming release 0.1.1."
+
+    # Update version
+    bumpversion minor
+
+    # Push
+    git push && git push --tags
 
 
 Credits

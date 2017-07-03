@@ -164,14 +164,16 @@ This is how you add a `RotatingFileHandler <https://docs.python.org/2/library/lo
     # Setup the RotatingFileHandler
     rotating_file_handler = RotatingFileHandler("/tmp/app-rotating.log", maxBytes=100000, backupCount=2)
     rotating_file_handler.setLevel(logging.DEBUG)
-    rotating_file_handler.setFormatter(logzero.LogFormatter())
+    rotating_file_handler.setFormatter(logzero.LogFormatter(color=False))
 
     # Attach it to the logzero default logger
     logzero.logger.addHandler(rotating_file_handler)
 
-    # Log stuff
+    # Log messages
     logzero.logger.info("this is a test")
 
+
+When you call `setup_default_logger(..)` or `setup_logger(..)`, all current handlers will be replaced.
 
 Documentation
 =================
