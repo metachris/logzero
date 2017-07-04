@@ -22,12 +22,17 @@ Usage:
 
 In order to also log to a file, just add a `logfile` parameter:
 
-    logger = logzero.setup_default_logger(logfile="/tmp/test.log")
+    logzero.setup_default_logger(logfile="/tmp/test.log")
+
+If you want to use specific loggers instead of the global default logger, use
+`setup_logger(..)` instead of `setup_default_logger(..)`:
+
+    logger = logzero.setup_logger(logfile="/tmp/test.log")
 
 The default loglevel is `logging.DEBUG`. You can set it with the
 parameter `level`.
 
-See also https://logzero.readthedocs.io for more information.
+See the documentation for more information: https://logzero.readthedocs.io
 """
 import sys
 import logging
@@ -274,6 +279,7 @@ def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None):
     """
     global logger
     logger = setup_logger(name="_logzero_default", logfile=logfile, level=level, formatter=formatter)
+    return logger
 
 
 if __name__ == "__main__":

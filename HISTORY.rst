@@ -2,6 +2,12 @@
 History
 =======
 
+1.1.2 (2017-07-04)
+------------------
+
+* Better reconfiguration of handlers, doesn't remove custom handlers anymore
+
+
 1.1.0 (2017-07-03)
 ------------------
 

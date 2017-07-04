@@ -80,6 +80,12 @@ Install `logzero` with `pip`_:
     $ pip install -U logzero
 
 
+Changelog
+---------
+
+See the changelog here: https://github.com/metachris/logzero/blob/master/HISTORY.rst
+
+
 Future Features & Ideas
 -----------------------
 
