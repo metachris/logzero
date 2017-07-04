@@ -83,8 +83,8 @@ Install `logzero` with `pip`_:
 Future Features & Ideas
 -----------------------
 
-* Rotating Logfiles
-* JSON output a la 12 factor app
+* Easier usage of custom log handlers (currently works `like this <https://logzero.readthedocs.io/en/latest/#adding-custom-handlers-eg-rotatinglogfile>`_)
+* JSON output (a la 12 factor app)
 * Send logs to remote log collector (maybe)
 * Structured logging a la https://structlog.readthedocs.io/en/stable/index.html (maybe)
 
@@ -92,9 +92,9 @@ Future Features & Ideas
 Related Projects
 ----------------
 
-* https://structlog.readthedocs.io/en/stable/why.html
 * https://12factor.net/logs
-* fluentd, logstash
+* Log collectors: fluentd, logstash, etc.
+* https://structlog.readthedocs.io/en/stable/why.html
 
 
 Notes: How to release a new version
@@ -130,3 +130,4 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 
 .. _pip: https://pip.pypa.io
+

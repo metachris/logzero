@@ -174,8 +174,6 @@ This is how you add a `RotatingFileHandler <https://docs.python.org/2/library/lo
     logzero.logger.info("this is a test")
 
 
-When you call `setup_default_logger(..)` or `setup_logger(..)`, all current handlers will be replaced.
-
 Documentation
 =================
 

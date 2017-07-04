@@ -9,10 +9,11 @@ Tests for `logzero` module.
 import os
 import tempfile
 import logging
+
 import logzero
 
 
-def test_write_to_logfile():
+def test_write_to_logfile_and_stderr(capsys):
     """
     Should log to a file.
     """
@@ -20,6 +21,10 @@ def test_write_to_logfile():
     try:
         logger = logzero.setup_logger(logfile=temp.name)
         logger.info("test log output")
+
+        _out, err = capsys.readouterr()
+        assert " test_logzero:" in err
+        assert err.endswith("test log output\n")
 
         with open(temp.name) as f:
             content = f.read()
@@ -139,13 +144,12 @@ def test_default_logger():
         logzero.setup_default_logger(logfile=temp.name)
         logzero.logger.debug("debug1")  # will be logged
 
-        # Setup with loglevel INFO
+        # Reconfigure with loglevel INFO
         logzero.setup_default_logger(logfile=temp.name, level=logging.INFO)
         logzero.logger.debug("debug2")  # will not be logged
-
         logzero.logger.info("info1")  # will be logged
 
-        # Setup a different formatter
+        # Reconfigure with a different formatter
         log_format = '%(color)s[xxx]%(end_color)s %(message)s'
         formatter = logzero.LogFormatter(fmt=log_format)
         logzero.setup_default_logger(logfile=temp.name, level=logging.INFO, formatter=formatter)
@@ -160,6 +164,63 @@ def test_default_logger():
             assert "] info1" in content
             assert "xxx] info2" in content
             assert "] debug3" not in content
+
+    finally:
+        temp.close()
+
+
+def test_setup_logger_reconfiguration():
+    """
+    Should be able to reconfigure without loosing custom handlers
+    """
+    temp = tempfile.NamedTemporaryFile()
+    temp2 = tempfile.NamedTemporaryFile()
+    try:
+        logzero.setup_default_logger(logfile=temp.name)
+
+        # Add a custom file handler
+        filehandler = logging.FileHandler(temp2.name)
+        filehandler.setLevel(logging.DEBUG)
+        filehandler.setFormatter(logzero.LogFormatter(color=False))
+        logzero.logger.addHandler(filehandler)
+
+        # First debug message goes to both files
+        logzero.logger.debug("debug1")
+
+        # Reconfigure logger to remove logfile
+        logzero.setup_default_logger()
+        logzero.logger.debug("debug2")
+
+        # Reconfigure logger to add logfile
+        logzero.setup_default_logger(logfile=temp.name)
+        logzero.logger.debug("debug3")
+
+        # Reconfigure logger to set minimum loglevel to INFO
+        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO)
+        logzero.logger.debug("debug4")
+        logzero.logger.info("info1")
+
+        # Reconfigure logger to set minimum loglevel back to DEBUG
+        logzero.setup_default_logger(logfile=temp.name, level=logging.DEBUG)
+        logzero.logger.debug("debug5")
+
+        with open(temp.name) as f:
+            content = f.read()
+            assert "] debug1" in content
+            assert "] debug2" not in content
+            assert "] debug3" in content
+            assert "] debug4" not in content
+            assert "] info1" in content
+            assert "] debug5" in content
+
+        with open(temp2.name) as f:
+            content = f.read()
+            assert "] debug1" in content
+            assert "] debug2" in content
+            assert "] debug3" in content
+            assert "] debug4" not in content
+            assert "] info1" in content
+            assert "] debug5" in content
 
     finally:
         temp.close()

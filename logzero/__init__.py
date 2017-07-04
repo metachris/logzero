@@ -72,33 +72,41 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
     :return: A fully configured Python logging `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_ you can use with `.debug("msg")`, etc.
     """
-    logger = logging.getLogger(name or __name__)
-    logger.propagate = False
-    logger.setLevel(level)
+    _logger = logging.getLogger(name or __name__)
+    _logger.propagate = False
+    _logger.setLevel(level)
 
-    # Remove old handlers to allow updating settings
-    for handler in list(logger.handlers):
-        logger.removeHandler(handler)
+    # Reconfigure existing handlers
+    has_stream_handler = False
+    for handler in list(_logger.handlers):
+        if isinstance(handler, logging.StreamHandler):
+            has_stream_handler = True
 
-    # create console handler
-    stream_handler = logging.StreamHandler()
-    stream_handler.setLevel(level)  # propagate all messages
+        if isinstance(handler, logging.FileHandler) and hasattr(handler, "_is_logzero_internal"):
+            # Internal FileHandler needs to be removed and re-setup to be able
+            # to set a new logfile.
+            _logger.removeHandler(handler)
+            continue
 
-    # add the formatter to the handler
-    # formatter = logging.Formatter('%(name)s - %(asctime)-15s - %(levelname)s: %(message)s');
-    stream_handler.setFormatter(formatter or LogFormatter())
+        # reconfigure handler
+        handler.setLevel(level)
+        handler.setFormatter(formatter or LogFormatter())
 
-    # setup logger and add the handlers
-    logger.addHandler(stream_handler)
+    if not has_stream_handler:
+        stream_handler = logging.StreamHandler()
+        stream_handler.setLevel(level)
+        # formatter = logging.Formatter('%(name)s - %(asctime)-15s - %(levelname)s: %(message)s');
+        stream_handler.setFormatter(formatter or LogFormatter())
+        _logger.addHandler(stream_handler)
 
     if logfile:
         filehandler = logging.FileHandler(logfile)
+        filehandler._is_logzero_internal = True
         filehandler.setLevel(level)
         filehandler.setFormatter(formatter or LogFormatter(color=False))
-        logger.addHandler(filehandler)
+        _logger.addHandler(filehandler)
 
-    # logger.debug("logger set up. level=%d", level)
-    return logger
+    return _logger
 
 
 class LogFormatter(logging.Formatter):
@@ -250,8 +258,7 @@ logger = setup_logger(name="_logzero_default")
 
 def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None):
     """
-    Works just like `setup_logger(..)` but globally reconfigures the default `logzero.logger`
-    instance.
+    Globally reconfigures the default `logzero.logger` instance.
 
     Usage:
 
@@ -259,15 +266,14 @@ def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None):
 
         from logzero import logger, setup_default_logger
         setup_default_logger(level=logging.WARN)
-        logger.info("hello")
+        logger.info("hello")  # this will not be displayed anymore because minimum loglevel was set to WARN
 
     :arg string logfile: If set, also write logs to the specified filename.
     :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `logging.DEBUG`).
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
-    :return: The fully reconfigured global logzero default `logger instance <https://docs.python.org/2/library/logging.html#logger-objects>`_ you can use with `.debug("msg")`, etc.
     """
+    global logger
     logger = setup_logger(name="_logzero_default", logfile=logfile, level=level, formatter=formatter)
-    return logger
 
 
 if __name__ == "__main__":
