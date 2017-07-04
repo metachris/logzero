@@ -27,7 +27,7 @@ test_requirements = [
 
 setup(
     name='logzero',
-    version='1.1.1',
+    version='1.1.2',
     description="Python logging made easy",
     long_description=readme + '\n\n' + history,
     author="Chris Hager",
