@@ -17,6 +17,7 @@ def test_write_to_logfile_and_stderr(capsys):
     """
     Should log to a file.
     """
+    logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
         logger = logzero.setup_logger(logfile=temp.name)
@@ -39,6 +40,7 @@ def test_custom_formatter():
     """
     Should work with a custom formatter.
     """
+    logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
         log_format = '%(color)s[%(levelname)1.1s %(asctime)s customnametest:%(lineno)d]%(end_color)s %(message)s'
@@ -59,6 +61,7 @@ def test_loglevel():
     """
     Should not log any debug messages if minimum level is set to INFO
     """
+    logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
         logger = logzero.setup_logger(logfile=temp.name, level=logging.INFO)
@@ -76,6 +79,7 @@ def test_bytes():
     """
     Should properly log bytes
     """
+    logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
         logger = logzero.setup_logger(logfile=temp.name)
@@ -96,6 +100,7 @@ def test_unicode():
     """
     Should log unicode
     """
+    logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
         logger = logzero.setup_logger(logfile=temp.name)
@@ -114,6 +119,7 @@ def test_multiple_loggers_one_logfile():
     """
     Should properly log bytes
     """
+    logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
         logger1 = logzero.setup_logger(name="logger1", logfile=temp.name)
@@ -139,6 +145,7 @@ def test_default_logger():
     """
     Default logger should work and be able to be reconfigured.
     """
+    logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
         logzero.setup_default_logger(logfile=temp.name)
@@ -173,6 +180,7 @@ def test_setup_logger_reconfiguration():
     """
     Should be able to reconfigure without loosing custom handlers
     """
+    logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     temp2 = tempfile.NamedTemporaryFile()
     try:

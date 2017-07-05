@@ -36,6 +36,8 @@ See the documentation for more information: https://logzero.readthedocs.io
 """
 import sys
 import logging
+from logging.handlers import RotatingFileHandler
+
 try:
     import curses  # type: ignore
 except ImportError:
@@ -56,12 +58,29 @@ else:
     unicode_type = unicode  # noqa
     basestring_type = basestring  # noqa
 
+# Name of the internal default logger
+LOGZERO_DEFAULT_LOGGER = "logzero_default"
 
-def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
+# Attribute which all internal loggers carry
+LOGZERO_INTERNAL_LOGGER_ATTR = "_is_logzero_internal"
+
+# Logzero default logger
+logger = None
+
+# Current state of the internal logging settings
+_loglevel = logging.DEBUG
+_logfile = None
+_formatter = None
+
+
+def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0):
     """
     Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
     else creates a new one.
+
+    If you set the `logfile` parameter with a filename, the logger will save the messages to the logfile,
+    but does not rotate by default. If you want to enable log rotation, set `maxBytes` and `backupCount` too.
 
     Usage:
 
@@ -75,6 +94,8 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
     :arg string logfile: If set, also write logs to the specified filename.
     :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `logging.DEBUG`).
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
+    :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
+    :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
     :return: A fully configured Python logging `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_ you can use with `.debug("msg")`, etc.
     """
     _logger = logging.getLogger(name or __name__)
@@ -87,7 +108,7 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
         if isinstance(handler, logging.StreamHandler):
             has_stream_handler = True
 
-        if isinstance(handler, logging.FileHandler) and hasattr(handler, "_is_logzero_internal"):
+        if isinstance(handler, logging.FileHandler) and hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
             # Internal FileHandler needs to be removed and re-setup to be able
             # to set a new logfile.
             _logger.removeHandler(handler)
@@ -99,17 +120,17 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None):
 
     if not has_stream_handler:
         stream_handler = logging.StreamHandler()
+        setattr(stream_handler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         stream_handler.setLevel(level)
-        # formatter = logging.Formatter('%(name)s - %(asctime)-15s - %(levelname)s: %(message)s');
         stream_handler.setFormatter(formatter or LogFormatter())
         _logger.addHandler(stream_handler)
 
     if logfile:
-        filehandler = logging.FileHandler(logfile)
-        filehandler._is_logzero_internal = True
-        filehandler.setLevel(level)
-        filehandler.setFormatter(formatter or LogFormatter(color=False))
-        _logger.addHandler(filehandler)
+        rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
+        setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
+        rotating_filehandler.setLevel(level)
+        rotating_filehandler.setFormatter(formatter or LogFormatter(color=False))
+        _logger.addHandler(rotating_filehandler)
 
     return _logger
 
@@ -258,11 +279,10 @@ def _safe_unicode(s):
         return repr(s)
 
 
-logger = setup_logger(name="_logzero_default")
-
-
-def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None):
+def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0):
     """
+    Deprecated. Use `logzero.loglevel(..)`, `logzero.logfile(..)`, etc.
+
     Globally reconfigures the default `logzero.logger` instance.
 
     Usage:
@@ -276,12 +296,124 @@ def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None):
     :arg string logfile: If set, also write logs to the specified filename.
     :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `logging.DEBUG`).
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
+    :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
+    :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
     """
     global logger
-    logger = setup_logger(name="_logzero_default", logfile=logfile, level=level, formatter=formatter)
+    logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=logfile, level=level, formatter=formatter)
     return logger
 
 
+def reset_default_logger():
+    """
+    Resets the internal default logger to the initial configuration
+    """
+    global logger
+    global _loglevel
+    global _logfile
+    global _formatter
+    _loglevel = logging.DEBUG
+    _logfile = None
+    _formatter = None
+    logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=_logfile, level=_loglevel, formatter=_formatter)
+
+
+# Initially setup the default logger
+reset_default_logger()
+
+
+def loglevel(level=logging.DEBUG, update_custom_handlers=False):
+    """
+    Set the minimum loglevel for the default logger (`logzero.logger`).
+    This reconfigures only the logzero internal handlers by default,
+    but you can also reconfigure custom handlers by using `update_custom_handlers=True`.
+
+    :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `logging.DEBUG`).
+    :arg bool update_custom_handlers: If you added custom handlers to this logger and want this to update them too, you need to set `update_custom_handlers` to `True`
+    """
+    logger.setLevel(level)
+
+    # Reconfigure existing internal handlers
+    for handler in list(logger.handlers):
+        if hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR) or update_custom_handlers:
+            handler.setLevel(level)
+
+    global _loglevel
+    _loglevel = level
+
+
+def formatter(formatter, update_custom_handlers=False):
+    """
+    Overwrites the formatter for all handlers of the default logger (`logzero.logger`).
+    This reconfigures only the logzero internal handlers by default, but you can also
+    reconfigure custom handlers by using `update_custom_handlers=True`.
+
+    Beware that setting a formatter which uses colors also may write the color codes
+    to logfiles.
+
+    :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
+    :arg bool update_custom_handlers: If you added custom handlers to this logger and want this to update them too, you need to set `update_custom_handlers` to `True`
+    """
+    for handler in list(logger.handlers):
+        if hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR) or update_custom_handlers:
+            handler.setFormatter(formatter)
+
+    global _formatter
+    _formatter = formatter
+
+
+def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encoding=None):
+    """
+    Setup logging to file with a RotatingFileHandler.
+
+    By default, the file grows indefinitely (no rotation). You can use the maxBytes and
+    backupCount values to allow the file to rollover at a predetermined size. When the
+    size is about to be exceeded, the file is closed and a new file is silently opened
+    for output. Rollover occurs whenever the current log file is nearly maxBytes in length;
+    if either of maxBytes or backupCount is zero, rollover never occurs.
+
+    If backupCount is non-zero, the system will save old log files by appending the
+    extensions ‘.1’, ‘.2’ etc., to the filename. For example, with a backupCount of 5
+    and a base file name of app.log, you would get app.log, app.log.1, app.log.2, up to
+    app.log.5. The file being written to is always app.log. When this file is filled,
+    it is closed and renamed to app.log.1, and if files app.log.1, app.log.2, etc. exist,
+    then they are renamed to app.log.2, app.log.3 etc. respectively.
+
+    :arg int filename: Filename of the logfile. Set to `None` to disable logging to the logfile.
+    :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
+    :arg string mode: mode to open the file with. Defaults to 'a'
+    :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
+    :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
+    :arg string encoding: Used to open the file with that encoding.
+    """
+    # Step 1: If an internal RotatingFileHandler already exists, remove it
+    for handler in list(logger.handlers):
+        if isinstance(handler, RotatingFileHandler) and hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
+            logger.removeHandler(handler)
+            continue
+
+    # Step 2: If wanted, add the RotatingFileHandler now
+    if filename:
+        rotating_filehandler = RotatingFileHandler(filename, mode=mode, maxBytes=maxBytes, backupCount=backupCount, encoding=encoding)
+        setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
+        rotating_filehandler.setLevel(_loglevel)
+        rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
+        logger.addHandler(rotating_filehandler)
+
+
+def log_function_call(func):
+    def wrap(*args, **kwargs):
+        args_str = ", ".join([str(arg) for arg in args])
+        kwargs_str = ", ".join(["%s=%s" % (key, kwargs[key]) for key in kwargs])
+        if args_str and kwargs_str:
+            all_args_str = ", ".join([args_str, kwargs_str])
+        else:
+            all_args_str = args_str or kwargs_str
+        logger.debug("%s(%s)", func.__name__, all_args_str)
+        return func(*args, **kwargs)
+    return wrap
+
+
 if __name__ == "__main__":
-    logger = setup_logger()
-    logger.info("hello")
+    _logger = setup_logger()
+    _logger.info("hello")

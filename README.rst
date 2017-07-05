@@ -31,7 +31,7 @@ Robust and effective logging for Python 2 and 3.
 Features
 --------
 
-* Easy logging to console and/or file.
+* Easy logging to console and/or (rotating) file.
 * Provides a fully configured standard `Python logger object <https://docs.python.org/2/library/logging.html#module-level-functions>`_.
 * Pretty formatting, including level-specific colors in the console.
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
@@ -65,6 +65,43 @@ Example Usage
     logger.warn("warn")
     logger.error("error")
 
+    # This is how you'd log an exception
+    try:
+        raise Exception("this is a demo exception")
+    except Exception as e:
+        logger.exception(e)
+
+Here are more examples which show how to use logfiles, custom formatters
+and setting a minimum loglevel:
+
+.. code-block:: python
+
+    import logging
+    import logzero
+    from logzero import logger
+
+    # This log message goes to the console
+    logger.debug("hello")
+
+    # Set a minimum log level
+    logzero.loglevel(logging.INFO)
+
+    # Set a logfile (all future log messages are also saved there)
+    logzero.logfile("/tmp/logfile.log")
+
+    # Set a rotating logfile (replaces the previous logfile handler)
+    logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1000000, backupCount=3)
+
+    # Disable logging to a file
+    logzero.logfile(None)
+
+    # Set a custom formatter
+    formatter = logging.Formatter('%(name)s - %(asctime)-15s - %(levelname)s: %(message)s');
+    logzero.formatter(formatter)
+
+    # Log some variables
+    logger.info("var1: %s, var2: %s", var1, var2)
+
 Take a look at the documentation for more information and examples:
 
 * Documentation: https://logzero.readthedocs.io.
@@ -89,10 +126,19 @@ See the changelog here: https://github.com/metachris/logzero/blob/master/HISTORY
 Future Features & Ideas
 -----------------------
 
+* Decorator for logging function calls
 * Easier usage of custom log handlers (currently works `like this <https://logzero.readthedocs.io/en/latest/#adding-custom-handlers-eg-rotatinglogfile>`_)
 * JSON output (a la 12 factor app)
 * Send logs to remote log collector (maybe)
 * Structured logging a la https://structlog.readthedocs.io/en/stable/index.html (maybe)
+
+
+TODO
+----
+
+* Tests:
+  * Custom handlers and reconfiguration
+  * Weird: py.test with default logger - capturing err does not work if the logger is setup initially in logzero. Only works when setup from the py script.
 
 
 Related Projects
