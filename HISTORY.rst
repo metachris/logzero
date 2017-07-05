@@ -2,6 +2,41 @@
 History
 =======
 
+1.2.0 (2017-07-05)
+------------------
+
+* Way better API for configuring the default logger with `logzero.loglevel(..)`, `logzero.logfile(..)`, etc.
+* Built-in rotating logfile support.
+
+.. code-block:: python
+
+    import logging
+    import logzero
+    from logzero import logger
+
+    # This log message goes to the console
+    logger.debug("hello")
+
+    # Set a minimum log level
+    logzero.loglevel(logging.INFO)
+
+    # Set a logfile (all future log messages are also saved there)
+    logzero.logfile("/tmp/logfile.log")
+
+    # Set a rotating logfile (replaces the previous logfile handler)
+    logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1000000, backupCount=3)
+
+    # Disable logging to a file
+    logzero.logfile(None)
+
+    # Set a custom formatter
+    formatter = logging.Formatter('%(name)s - %(asctime)-15s - %(levelname)s: %(message)s');
+    logzero.formatter(formatter)
+
+    # Log some variables
+    logger.info("var1: %s, var2: %s", var1, var2)
+
+
 1.1.2 (2017-07-04)
 ------------------
 

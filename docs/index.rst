@@ -105,19 +105,19 @@ Advanced Usage Examples
 Here are more examples which show how to use logfiles, custom formatters
 and setting a minimum loglevel.
 
-+-----------------------------------------+------------------------+
-| Outcome                                 | Method                 |
-+=========================================+========================+
-| Set a minimum log level                 | logzero.loglevel(..)   |
-+-----------------------------------------+------------------------+
-| Add logging to a logfile                | logzero.logfile(..)    |
-+-----------------------------------------+------------------------+
-| Setup a rotating logfile                | logzero.logfile(..)    |
-+-----------------------------------------+------------------------+
-| Disable logging to a logfile            | logzero.logfile(None)  |
-+-----------------------------------------+------------------------+
-| Use a custom formatter                  | logzero.formatter(..)  |
-+-----------------------------------------+------------------------+
++-----------------------------------------+--------------------------------------------------+
+| Outcome                                 | Method                                           |
++=========================================+==================================================+
+| Set a minimum log level                 | `logzero.loglevel(..) <#i-logzero-loglevel>`_    |
++-----------------------------------------+--------------------------------------------------+
+| Add logging to a logfile                | `logzero.logfile(..) <#i-logzero-logfile>`_      |
++-----------------------------------------+--------------------------------------------------+
+| Setup a rotating logfile                | `logzero.logfile(..) <#i-logzero-logfile>`_      |
++-----------------------------------------+--------------------------------------------------+
+| Disable logging to a logfile            | `logzero.logfile(None) <#i-logzero-logfile>`_    |
++-----------------------------------------+--------------------------------------------------+
+| Use a custom formatter                  | `logzero.formatter(..) <#i-logzero-formatter>`_  |
++-----------------------------------------+--------------------------------------------------+
 
 
 .. code-block:: python
