@@ -121,3 +121,32 @@ def test_api_rotating_logfile(capsys):
 
     finally:
         temp.close()
+
+
+def test_api_logfile_custom_loglevel():
+    """
+    logzero.logfile(..) should be able to use a custom loglevel
+    """
+    logzero.reset_default_logger()
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        # Set logfile with custom loglevel
+        logzero.logfile(temp.name, loglevel=logging.WARN)
+        logzero.logger.info("info1")
+        logzero.logger.warn("warn1")
+
+        # If setting a loglevel it will currently overrite the custom loglevel
+        # of the file handler
+        logzero.loglevel(logging.INFO)
+        logzero.logger.info("info2")
+        logzero.logger.warn("warn2")
+
+        with open(temp.name) as f:
+            content = f.read()
+            assert "] info1" not in content
+            assert "] warn1" in content
+            assert "] info2" in content
+            assert "] warn2" in content
+
+    finally:
+        temp.close()

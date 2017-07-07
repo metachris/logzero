@@ -136,9 +136,10 @@ Future Features & Ideas
 TODO
 ----
 
-* Tests:
+* Tests
+
   * Custom handlers and reconfiguration
-  * Weird: py.test with default logger - capturing err does not work if the logger is setup initially in logzero. Only works when setup from the py script.
+  * Strange behaviour: py.test with default logger - capturing err does not work if the logger is setup initially in logzero. Only works when setup from the py script.
 
 
 Related Projects

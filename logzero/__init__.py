@@ -362,7 +362,7 @@ def formatter(formatter, update_custom_handlers=False):
     _formatter = formatter
 
 
-def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encoding=None):
+def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encoding=None, loglevel=None):
     """
     Setup logging to file with a RotatingFileHandler.
 
@@ -385,6 +385,7 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
     :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
     :arg string encoding: Used to open the file with that encoding.
+    :arg int loglevel: Set a custom loglevel for the file logger, else uses the currently set. This will be overwritten if you call `logzero.loglevel(..)`.
     """
     # Step 1: If an internal RotatingFileHandler already exists, remove it
     for handler in list(logger.handlers):
@@ -396,7 +397,7 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
     if filename:
         rotating_filehandler = RotatingFileHandler(filename, mode=mode, maxBytes=maxBytes, backupCount=backupCount, encoding=encoding)
         setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
-        rotating_filehandler.setLevel(_loglevel)
+        rotating_filehandler.setLevel(loglevel or _loglevel)
         rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
         logger.addHandler(rotating_filehandler)
 
