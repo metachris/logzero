@@ -232,3 +232,23 @@ def test_setup_logger_reconfiguration():
 
     finally:
         temp.close()
+
+
+def test_setup_logger_logfile_custom_loglevel(capsys):
+    """
+    setup_logger(..) with filelogger and custom loglevel
+    """
+    logzero.reset_default_logger()
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logger = logzero.setup_logger(logfile=temp.name, fileLoglevel=logging.WARN)
+        logger.info("info1")
+        logger.warn("warn1")
+
+        with open(temp.name) as f:
+            content = f.read()
+            assert "] info1" not in content
+            assert "] warn1" in content
+
+    finally:
+        temp.close()

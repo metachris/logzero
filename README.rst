@@ -24,8 +24,8 @@ Robust and effective logging for Python 2 and 3.
    :alt: Logo
    :width: 300px
 
-* GitHub repository: https://github.com/metachris/logzero
 * Documentation: https://logzero.readthedocs.io
+* GitHub: https://github.com/metachris/logzero
 
 
 Features
@@ -36,7 +36,7 @@ Features
 * Pretty formatting, including level-specific colors in the console.
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
 * Multiple loggers can write to the same logfile (also across multiple Python files).
-* Global default logger with `logzero.logger` and custom loggers with `logzero.setup_logger(..)`.
+* Global default logger with `logzero.logger <https://logzero.readthedocs.io/en/latest/#i-logzero-logger>`_ and custom loggers with `logzero.setup_logger(..) <https://logzero.readthedocs.io/en/latest/#i-logzero-setup-logger>`_.
 * Compatible with Python 2 and 3.
 * All contained in a `single file`_.
 * No further Python dependencies.
@@ -89,6 +89,9 @@ and setting a minimum loglevel:
     # Set a logfile (all future log messages are also saved there)
     logzero.logfile("/tmp/logfile.log")
 
+    # You can also set a different loglevel for the file handler
+    logzero.logfile("/tmp/logfile.log", loglevel=logging.ERROR)
+
     # Set a rotating logfile (replaces the previous logfile handler)
     logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1000000, backupCount=3)
 
@@ -127,7 +130,7 @@ Future Features & Ideas
 -----------------------
 
 * Decorator for logging function calls
-* Easier usage of custom log handlers (currently works `like this <https://logzero.readthedocs.io/en/latest/#adding-custom-handlers-eg-rotatinglogfile>`_)
+* Easier usage of custom log handlers (currently works `like this <https://logzero.readthedocs.io/en/latest/#adding-custom-handlers-eg-sysloghandler>`_)
 * JSON output (a la 12 factor app)
 * Send logs to remote log collector (maybe)
 * Structured logging a la https://structlog.readthedocs.io/en/stable/index.html (maybe)

@@ -135,8 +135,8 @@ def test_api_logfile_custom_loglevel():
         logzero.logger.info("info1")
         logzero.logger.warn("warn1")
 
-        # If setting a loglevel it will currently overrite the custom loglevel
-        # of the file handler
+        # If setting a loglevel with logzero.loglevel(..) it will not overrite
+        # the custom loglevel of the file handler
         logzero.loglevel(logging.INFO)
         logzero.logger.info("info2")
         logzero.logger.warn("warn2")
@@ -145,7 +145,7 @@ def test_api_logfile_custom_loglevel():
             content = f.read()
             assert "] info1" not in content
             assert "] warn1" in content
-            assert "] info2" in content
+            assert "] info2" not in content
             assert "] warn2" in content
 
     finally:

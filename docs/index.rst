@@ -63,7 +63,7 @@ You can also install `logzero` from the public `Github repo`_:
 Example Usage
 =============
 
-You can use `logzero` with the default `logger`, which just logs to the console, like this:
+You can use `logzero` like this (logs only to the console by default):
 
 .. code-block:: python
 
@@ -81,7 +81,7 @@ You can use `logzero` with the default `logger`, which just logs to the console,
     except Exception as e:
         logger.exception(e)
 
-If this was a file called `demo.py`, the output will look like this:
+If this was a file called ``demo.py``, the output will look like this:
 
 .. image:: _static/demo_output_with_exception.png
    :alt: Demo output in color
@@ -134,6 +134,9 @@ and setting a minimum loglevel.
 
     # Set a logfile (all future log messages are also saved there)
     logzero.logfile("/tmp/logfile.log")
+
+    # You can also set a different loglevel for the file handler
+    logzero.logfile("/tmp/logfile.log", loglevel=logging.ERROR)
 
     # Set a rotating logfile (replaces the previous logfile handler)
     logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1000000, backupCount=3)
