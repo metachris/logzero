@@ -45,7 +45,7 @@ except ImportError:
 
 __author__ = """Chris Hager"""
 __email__ = 'chris@linuxuser.at'
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 
 # Python 2+3 compatibility settings for logger
 bytes_type = bytes
