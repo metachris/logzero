@@ -32,5 +32,5 @@ python:
 - 3.6
 - nightly
 - pypy
-- pypy3
+#- pypy3
 script: tox
