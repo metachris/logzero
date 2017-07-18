@@ -239,11 +239,16 @@ class LogFormatter(logging.Formatter):
 
 
 def _stderr_supports_color():
-    if os.name == 'nt':
-        # Windows supports colors with colorama
+    # Colors can be forced with an env variable
+    if os.getenv('LOGZERO_FORCE_COLOR') == '1':
         return True
 
-    elif curses and hasattr(sys.stderr, 'isatty') and sys.stderr.isatty():
+    # Windows supports colors with colorama
+    if os.name == 'nt':
+        return True
+
+    # Detect color support of stderr with curses (Linux/macOS)
+    if curses and hasattr(sys.stderr, 'isatty') and sys.stderr.isatty():
         try:
             curses.setupterm()
             if curses.tigetnum("colors") > 0:
