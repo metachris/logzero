@@ -34,8 +34,10 @@ parameter `level`.
 
 See the documentation for more information: https://logzero.readthedocs.io
 """
+import os
 import sys
 import logging
+import colorama
 from logging.handlers import RotatingFileHandler
 
 try:
@@ -74,6 +76,10 @@ logger = None
 _loglevel = logging.DEBUG
 _logfile = None
 _formatter = None
+
+# Setup colorama on Windows
+if os.name == 'nt':
+    colorama.init()
 
 
 def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None):
@@ -149,10 +155,10 @@ class LogFormatter(logging.Formatter):
     DEFAULT_FORMAT = '%(color)s[%(levelname)1.1s %(asctime)s %(module)s:%(lineno)d]%(end_color)s %(message)s'
     DEFAULT_DATE_FORMAT = '%y%m%d %H:%M:%S'
     DEFAULT_COLORS = {
-        logging.DEBUG: 4,  # Blue
-        logging.INFO: 2,  # Green
-        logging.WARNING: 3,  # Yellow
-        logging.ERROR: 1,  # Red
+        logging.DEBUG: colorama.Fore.CYAN,
+        logging.INFO: colorama.Fore.GREEN,
+        logging.WARNING: colorama.Fore.YELLOW,
+        logging.ERROR: colorama.Fore.RED
     }
 
     def __init__(self,
@@ -176,27 +182,12 @@ class LogFormatter(logging.Formatter):
         logging.Formatter.__init__(self, datefmt=datefmt)
 
         self._fmt = fmt
-
         self._colors = {}
-        if color and _stderr_supports_color():
-            # The curses module has some str/bytes confusion in
-            # python3.  Until version 3.2.3, most methods return
-            # bytes, but only accept strings.  In addition, we want to
-            # output these strings with the logging module, which
-            # works with unicode strings.  The explicit calls to
-            # unicode() below are harmless in python2 but will do the
-            # right conversion in python 3.
-            fg_color = (curses.tigetstr("setaf") or curses.tigetstr("setf") or
-                        "")
-            if (3, 0) < sys.version_info < (3, 2, 3):
-                fg_color = unicode_type(fg_color, "ascii")
+        self._normal = ''
 
-            for levelno, code in colors.items():
-                self._colors[levelno] = unicode_type(
-                    curses.tparm(fg_color, code), "ascii")
-            self._normal = unicode_type(curses.tigetstr("sgr0"), "ascii")
-        else:
-            self._normal = ''
+        if color and _stderr_supports_color():
+            self._colors = colors
+            self._normal = colorama.Fore.RESET
 
     def format(self, record):
         try:
@@ -248,15 +239,20 @@ class LogFormatter(logging.Formatter):
 
 
 def _stderr_supports_color():
-    color = False
-    if curses and hasattr(sys.stderr, 'isatty') and sys.stderr.isatty():
+    if os.name == 'nt':
+        # Windows supports colors with colorama
+        return True
+
+    elif curses and hasattr(sys.stderr, 'isatty') and sys.stderr.isatty():
         try:
             curses.setupterm()
             if curses.tigetnum("colors") > 0:
-                color = True
+                return True
+
         except Exception:
             pass
-    return color
+
+    return False
 
 
 _TO_UNICODE_TYPES = (unicode_type, type(None))
