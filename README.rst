@@ -164,6 +164,7 @@ via https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checkli
     # Run the tests
     py.test
     make lint
+    tox
 
     # Update history
     vi HISTORY.rst

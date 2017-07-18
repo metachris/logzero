@@ -12,7 +12,7 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    # TODO: put package requirements here
+    'colorama'
 ]
 
 setup_requirements = [
@@ -28,7 +28,7 @@ test_requirements = [
 setup(
     name='logzero',
     version='1.2.1',
-    description="Python logging made easy",
+    description="Robust and effective logging for Python 2 and 3",
     long_description=readme + '\n\n' + history,
     author="Chris Hager",
     author_email='chris@linuxuser.at',
