@@ -20,12 +20,12 @@ Usage:
     logger.warn("warn")
     logger.error("error")
 
-In order to also log to a file, just add a `logfile` parameter:
+In order to also log to a file, just use `logzero.logfile(..)`:
 
-    logzero.setup_default_logger(logfile="/tmp/test.log")
+    logzero.logfile("/tmp/test.log")
 
 If you want to use specific loggers instead of the global default logger, use
-`setup_logger(..)` instead of `setup_default_logger(..)`:
+`setup_logger(..)`:
 
     logger = logzero.setup_logger(logfile="/tmp/test.log")
 
@@ -37,7 +37,7 @@ See the documentation for more information: https://logzero.readthedocs.io
 import os
 import sys
 import logging
-import colorama
+from logzero.colors import Fore as ForegroundColors
 from logging.handlers import RotatingFileHandler
 
 try:
@@ -79,7 +79,8 @@ _formatter = None
 
 # Setup colorama on Windows
 if os.name == 'nt':
-    colorama.init()
+    from colorama import init as colorama_init
+    colorama_init()
 
 
 def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None):
@@ -155,10 +156,10 @@ class LogFormatter(logging.Formatter):
     DEFAULT_FORMAT = '%(color)s[%(levelname)1.1s %(asctime)s %(module)s:%(lineno)d]%(end_color)s %(message)s'
     DEFAULT_DATE_FORMAT = '%y%m%d %H:%M:%S'
     DEFAULT_COLORS = {
-        logging.DEBUG: colorama.Fore.CYAN,
-        logging.INFO: colorama.Fore.GREEN,
-        logging.WARNING: colorama.Fore.YELLOW,
-        logging.ERROR: colorama.Fore.RED
+        logging.DEBUG: ForegroundColors.CYAN,
+        logging.INFO: ForegroundColors.GREEN,
+        logging.WARNING: ForegroundColors.YELLOW,
+        logging.ERROR: ForegroundColors.RED
     }
 
     def __init__(self,
@@ -187,7 +188,7 @@ class LogFormatter(logging.Formatter):
 
         if color and _stderr_supports_color():
             self._colors = colors
-            self._normal = colorama.Fore.RESET
+            self._normal = ForegroundColors.RESET
 
     def format(self, record):
         try:

@@ -11,20 +11,6 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [
-    'colorama'
-]
-
-setup_requirements = [
-    'pytest-runner',
-    # TODO(metachris): put setup requirements (distutils extensions, etc.) here
-]
-
-test_requirements = [
-    'pytest',
-    # TODO: put package test requirements here
-]
-
 setup(
     name='logzero',
     version='1.2.1',
@@ -35,12 +21,11 @@ setup(
     url='https://github.com/metachris/logzero',
     packages=find_packages(include=['logzero']),
     include_package_data=True,
-    install_requires=requirements,
     license="MIT license",
     zip_safe=False,
     keywords='logzero',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
@@ -51,8 +36,9 @@ setup(
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
     ],
-    test_suite='tests',
-    tests_require=test_requirements,
-    setup_requires=setup_requirements,
+    extras_require={
+        ':sys_platform=="win32"': ['colorama']
+    }
 )
