@@ -16,12 +16,12 @@ Robust and effective logging for Python 2 and 3.
 * Easy logging to console and/or (rotating) file.
 * Provides a fully configured standard `Python logger object <https://docs.python.org/2/library/logging.html#module-level-functions>`_.
 * Pretty formatting, including level-specific colors in the console.
+* Windows color output supported by `colorama`_
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
 * Multiple loggers can write to the same logfile (also works across multiple Python files).
 * Global default logger with `logzero.logger <#i-logzero-logger>`_ and custom loggers with `logzero.setup_logger(..) <#i-logzero-setup-logger>`_.
 * Compatible with Python 2 and 3.
 * All contained in a `single file`_.
-* No further Python dependencies.
 * Licensed under the MIT license.
 * Heavily inspired by the `Tornado web framework`_.
 * Hosted on GitHub: https://github.com/metachris/logzero
@@ -58,6 +58,7 @@ You can also install `logzero` from the public `Github repo`_:
 .. _tarball: https://github.com/metachris/logzero/tarball/master
 .. _single file: https://github.com/metachris/logzero/blob/master/logzero/__init__.py
 .. _Tornado web framework: https://github.com/tornadoweb/tornado
+.. _colorama: https://github.com/tartley/colorama
 
 
 Example Usage
