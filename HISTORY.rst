@@ -2,6 +2,12 @@
 History
 =======
 
+1.3.0 (2017-07-19)
+------------------
+
+* Color output now works in Windows (supported by colorama)
+
+
 1.2.1 (2017-07-09)
 ------------------
 
