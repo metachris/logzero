@@ -4,14 +4,16 @@ logzero
 
 
 .. image:: https://img.shields.io/pypi/v/logzero.svg
-        :target: https://pypi.python.org/pypi/logzero
+    :target: https://pypi.python.org/pypi/logzero
+    :alt: Latest version on PyPi
 
-.. image:: https://img.shields.io/travis/metachris/logzero.svg
-        :target: https://travis-ci.org/metachris/logzero
+.. image:: https://travis-ci.org/metachris/logzero.svg?branch=master
+    :target: https://travis-ci.org/metachris/logzero
+    :alt: Build status for master branch
 
 .. image:: https://readthedocs.org/projects/logzero/badge/?version=latest
-        :target: https://logzero.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
+    :target: https://logzero.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 .. image:: https://pyup.io/repos/github/metachris/logzero/shield.svg
      :target: https://pyup.io/repos/github/metachris/logzero/
