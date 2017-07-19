@@ -22,7 +22,7 @@ logzero
 
 Robust and effective logging for Python 2 and 3.
 
-.. image:: docs/_static/logo-small.png
+.. image:: https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/logo-small.png
    :alt: Logo
    :width: 300px
 
@@ -46,7 +46,7 @@ Features
 * Heavily inspired by the `Tornado web framework`_.
 
 
-.. image:: docs/_static/demo_output.png
+.. image:: https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/demo_output.png
    :alt: Demo output in color
    :width: 300px
 
@@ -142,6 +142,7 @@ Future Features & Ideas
 TODO
 ----
 
+* Travis CI: pypy3 gives error `RuntimeError: Python 3.3 or later is required` (see `job 255217329 <https://travis-ci.org/metachris/logzero/jobs/255217329>`_)
 * Tests
 
   * Custom handlers and reconfiguration
