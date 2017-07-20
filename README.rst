@@ -122,6 +122,7 @@ Install `logzero` with `pip`_:
 
     $ pip install -U logzero
 
+On openSUSE you can install the current version from repos: `python2-logzero <https://software.opensuse.org/package/python2-logzero>`_, `python3-logzero <https://software.opensuse.org/package/python3-logzero>`_.
 
 Changelog
 ---------
