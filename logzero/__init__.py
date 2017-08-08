@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 This helper provides a versatile yet easy to use and beautiful logging setup.
-You can use it to log to the console and optionally to a logfile. This propject
+You can use it to log to the console and optionally to a logfile. This project
 is heavily inspired by the Tornado web framework.
 
 * https://logzero.readthedocs.io
@@ -100,7 +100,7 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
         logger = setup_logger()
         logger.info("hello")
 
-    :arg string name: Name of the `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_. Multiple calls to ``setup_logger()`` with the same name will always return a reference to the same Logger object. (defaut: ``__name__``)
+    :arg string name: Name of the `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_. Multiple calls to ``setup_logger()`` with the same name will always return a reference to the same Logger object. (default: ``__name__``)
     :arg string logfile: If set, also write logs to the specified filename.
     :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: ``logging.DEBUG``).
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
@@ -210,7 +210,7 @@ class LogFormatter(logging.Formatter):
             # bytestrings.  This is a bit of a hacky place to do this, but
             # it's worth it since the encoding errors that would otherwise
             # result are so useless (and tornado is fond of using utf8-encoded
-            # byte strings whereever possible).
+            # byte strings wherever possible).
             record.message = _safe_unicode(message)
         except Exception as e:
             record.message = "Bad message (%r): %r" % (e, record.__dict__)
