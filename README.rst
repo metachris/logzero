@@ -74,6 +74,21 @@ Example Usage
     except Exception as e:
         logger.exception(e)
 
+
+Adding a rotating logfile is that easy:
+
+.. code-block:: python
+
+    import logzero
+    from logzero import logger
+
+    # Setup rotating logfile with 3 rotations, each with a maximum filesize of 1MB:
+    logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1e6, backupCount=3)
+
+    # Log messages
+    logger.info("This log message goes to the console and the logfile")
+
+
 Here are more examples which show how to use logfiles, custom formatters
 and setting a minimum loglevel:
 
@@ -133,8 +148,7 @@ You can also install `logzero` from the public `Github repo`_:
     $ cd logzero
     $ python setup.py install
 
-On openSUSE you can install the current version from repos: `python2-logzero <https://software.opensuse.org/package/python2-logzero>`_, `python3-logzero <https://software.opensuse.org/package/python3-logzero>`_.
-
+On openSUSE you can install the current version from repos: `python2-logzero <https://software.opensuse.org/package/python2-logzero>`_, `python3-logzero <https://software.opensuse.org/package/python3-logzero>`_. In the newest openSUSE release you can install it with zypper: `sudo zypper in python2-logzero`.
 
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/

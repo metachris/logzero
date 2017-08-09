@@ -53,7 +53,7 @@ You can also install `logzero` from the public `Github repo`_:
     $ python setup.py install
 
 On openSUSE you can install the current version from repos: `python2-logzero <https://software.opensuse.org/package/python2-logzero>`_, `python3-logzero <https://software.opensuse.org/package/python3-logzero>`_.
-
+In the newest openSUSE release you can install it with zypper: ``sudo zypper in python2-logzero``.
 
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
@@ -101,6 +101,23 @@ If this was a file called ``demo.py``, the output will look like this:
         File "demo.py", line 10, in <module>
             raise Exception("this is a demo exception")
         Exception: this is a demo exception
+
+
+Rotating Logfile
+----------------
+
+Adding a rotating logfile is that easy:
+
+.. code-block:: python
+
+    import logzero
+    from logzero import logger
+
+    # Setup rotating logfile with 3 rotations, each with a maximum filesize of 1MB:
+    logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1e6, backupCount=3)
+
+    # Log messages
+    logger.info("This log message goes to the console and the logfile")
 
 
 Advanced Usage Examples
