@@ -52,6 +52,9 @@ You can also install `logzero` from the public `Github repo`_:
     $ cd logzero
     $ python setup.py install
 
+On openSUSE you can install the current version from repos: `python2-logzero <https://software.opensuse.org/package/python2-logzero>`_, `python3-logzero <https://software.opensuse.org/package/python3-logzero>`_.
+
+
 .. _pip: https://pip.pypa.io
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 .. _Github repo: https://github.com/metachris/logzero
