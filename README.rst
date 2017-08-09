@@ -114,7 +114,7 @@ Take a look at the documentation for more information and examples:
 
 
 Installation
-=============
+------------
 
 Install `logzero` with `pip`_:
 
@@ -122,7 +122,24 @@ Install `logzero` with `pip`_:
 
     $ pip install -U logzero
 
+If you don't have `pip`_ installed, this `Python installation guide`_ can guide
+you through the process.
+
+You can also install `logzero` from the public `Github repo`_:
+
+.. code-block:: console
+
+    $ git clone https://github.com/metachris/logzero.git
+    $ cd logzero
+    $ python setup.py install
+
 On openSUSE you can install the current version from repos: `python2-logzero <https://software.opensuse.org/package/python2-logzero>`_, `python3-logzero <https://software.opensuse.org/package/python3-logzero>`_.
+
+
+.. _pip: https://pip.pypa.io
+.. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
+.. _Github repo: https://github.com/metachris/logzero
+
 
 Changelog
 ---------
