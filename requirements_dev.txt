@@ -8,4 +8,4 @@ Sphinx==1.6.3
 cryptography==2.0.3
 pytest==3.2.1
 PyYAML==3.12
-pytest-runner==2.11.1
+pytest-runner==2.12.1
