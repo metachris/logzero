@@ -1,5 +1,5 @@
 bumpversion==0.5.3
-wheel==0.29.0
+wheel==0.30.0
 watchdog==0.8.3
 flake8==3.4.1
 coverage==4.4.1
