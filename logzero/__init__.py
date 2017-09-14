@@ -392,7 +392,7 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
     it is closed and renamed to app.log.1, and if files app.log.1, app.log.2, etc. exist,
     then they are renamed to app.log.2, app.log.3 etc. respectively.
 
-    :arg int filename: Filename of the logfile. Set to `None` to disable logging to the logfile.
+    :arg string filename: Filename of the logfile. Set to `None` to disable logging to the logfile.
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
     :arg string mode: mode to open the file with. Defaults to ``a``
     :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.

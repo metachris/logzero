@@ -164,7 +164,7 @@ See the changelog here: https://github.com/metachris/logzero/blob/master/HISTORY
 Feedback
 --------
 
-All kind of feedback and contributions are welcome.
+All kinds of feedback and contributions are welcome.
 
 * `Create an issue <https://github.com/metachris/logzero/issues/new>`_
 * Create a pull request
