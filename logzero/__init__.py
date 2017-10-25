@@ -34,6 +34,7 @@ parameter `level`.
 
 See the documentation for more information: https://logzero.readthedocs.io
 """
+import functools
 import os
 import sys
 import logging
@@ -421,6 +422,7 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
 
 
 def log_function_call(func):
+    @functools.wraps(func)
     def wrap(*args, **kwargs):
         args_str = ", ".join([str(arg) for arg in args])
         kwargs_str = ", ".join(["%s=%s" % (key, kwargs[key]) for key in kwargs])
