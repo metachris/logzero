@@ -252,3 +252,14 @@ def test_setup_logger_logfile_custom_loglevel(capsys):
 
     finally:
         temp.close()
+
+
+def test_log_function_call():
+    @logzero.log_function_call
+    def example():
+        """example doc"""
+        pass
+
+    assert example.__name__ == "example"
+    assert example.__doc__ == "example doc"
+
