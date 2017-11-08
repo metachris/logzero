@@ -150,3 +150,33 @@ def test_api_logfile_custom_loglevel():
 
     finally:
         temp.close()
+
+
+def test_api_logfile_custom_lower_loglevel():
+    """
+    logzero.logfile(..) should be able to use a custom loglevel
+    """
+    logzero.reset_default_logger()
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        # Set logfile with custom loglevel
+        logzero.logfile(temp.name, loglevel=logging.DEBUG)
+        logzero.logger.debug("debug1")
+        logzero.logger.info("info1")
+
+        # If setting a loglevel with logzero.loglevel(..) it will not overwrite
+        # the custom loglevel of the file handler even if higher
+        logzero.loglevel(logging.INFO)
+        logzero.logger.debug("debug1")
+        logzero.logger.info("info2")
+
+        with open(temp.name) as f:
+            content = f.read()
+            assert "] debug1" in content
+            assert "] info1" in content
+
+            assert "] debug2" in content
+            assert "] info2" in content
+
+    finally:
+        temp.close()
