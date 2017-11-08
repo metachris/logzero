@@ -144,6 +144,9 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
         rotating_filehandler.setFormatter(formatter or LogFormatter(color=False))
         _logger.addHandler(rotating_filehandler)
 
+        if fileLoglevel and fileLoglevel < level:
+            _logger.setLevel(fileLoglevel)
+
     return _logger
 
 
@@ -415,10 +418,14 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
         if loglevel:
             setattr(rotating_filehandler, LOGZERO_INTERNAL_HANDLER_IS_CUSTOM_LOGLEVEL, True)
 
+            if loglevel < _loglevel:
+                logger.setLevel(loglevel)
+
         # Configure the handler and add it to the logger
         rotating_filehandler.setLevel(loglevel or _loglevel)
         rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
         logger.addHandler(rotating_filehandler)
+
 
 
 def log_function_call(func):
