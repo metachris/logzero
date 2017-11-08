@@ -414,11 +414,13 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
         setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         if loglevel:
             setattr(rotating_filehandler, LOGZERO_INTERNAL_HANDLER_IS_CUSTOM_LOGLEVEL, True)
-
+            if loglevel < _loglevel:
+                logger.setLevel(loglevel)
         # Configure the handler and add it to the logger
         rotating_filehandler.setLevel(loglevel or _loglevel)
         rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
         logger.addHandler(rotating_filehandler)
+
 
 
 def log_function_call(func):
