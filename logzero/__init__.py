@@ -143,6 +143,8 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
         rotating_filehandler.setLevel(fileLoglevel or level)
         rotating_filehandler.setFormatter(formatter or LogFormatter(color=False))
         _logger.addHandler(rotating_filehandler)
+        if fileLoglevel and fileLoglevel < level:
+            _logger.setLevel(fileLoglevel)
 
     return _logger
 
