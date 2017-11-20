@@ -262,4 +262,3 @@ def test_log_function_call():
 
     assert example.__name__ == "example"
     assert example.__doc__ == "example doc"
-
