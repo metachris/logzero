@@ -340,7 +340,6 @@ def loglevel(level=logging.DEBUG, update_custom_handlers=False):
     :arg bool update_custom_handlers: If you added custom handlers to this logger and want this to update them too, you need to set `update_custom_handlers` to `True`
     """
 
-
     # Reconfigure existing internal handlers
     for handler in list(logger.handlers):
         if hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR) or update_custom_handlers:
