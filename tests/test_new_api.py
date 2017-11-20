@@ -167,7 +167,7 @@ def test_api_logfile_custom_lower_loglevel():
         # If setting a loglevel with logzero.loglevel(..) it will not overwrite
         # the custom loglevel of the file handler even if higher
         logzero.loglevel(logging.INFO)
-        logzero.logger.debug("debug1")
+        logzero.logger.debug("debug2")
         logzero.logger.info("info2")
 
         with open(temp.name) as f:
