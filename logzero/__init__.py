@@ -84,7 +84,7 @@ if os.name == 'nt':
     colorama_init()
 
 
-def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None):
+def setup_logger(name=None, logfile=None, mode='a', level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None):
     """
     Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
@@ -103,6 +103,7 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
 
     :arg string name: Name of the `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_. Multiple calls to ``setup_logger()`` with the same name will always return a reference to the same Logger object. (default: ``__name__``)
     :arg string logfile: If set, also write logs to the specified filename.
+    :arg string mode: mode to open the file with. Defaults to ``a``
     :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: ``logging.DEBUG``).
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
     :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
@@ -138,7 +139,7 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
         _logger.addHandler(stream_handler)
 
     if logfile:
-        rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
+        rotating_filehandler = RotatingFileHandler(filename=logfile, mode=mode, maxBytes=maxBytes, backupCount=backupCount)
         setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         rotating_filehandler.setLevel(fileLoglevel or level)
         rotating_filehandler.setFormatter(formatter or LogFormatter(color=False))
