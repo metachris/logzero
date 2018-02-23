@@ -76,7 +76,7 @@ You can use `logzero` like this (logs only to the console by default):
     # These log messages are sent to the console
     logger.debug("hello")
     logger.info("info")
-    logger.warn("warn")
+    logger.warning("warning")
     logger.error("error")
 
     # This is how you'd log an exception
@@ -231,7 +231,7 @@ files and modules directly like this:
 
     logger.debug("hello")
     logger.info("info")
-    logger.warn("warn")
+    logger.warning("warning")
     logger.error("error")
 
 You can reconfigure the default logger globally with `logzero.setup_default_logger(..) <#i-logzero-setup-default-logger>`_.
