@@ -11,6 +11,7 @@ import tempfile
 import logging
 
 import logzero
+import pytest
 
 
 def test_write_to_logfile_and_stderr(capsys):
@@ -141,39 +142,44 @@ def test_multiple_loggers_one_logfile():
         temp.close()
 
 
-def test_default_logger():
+def test_default_logger(disableStdErrorLogger=False):
     """
     Default logger should work and be able to be reconfigured.
     """
     logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
-        logzero.setup_default_logger(logfile=temp.name)
+        logzero.setup_default_logger(logfile=temp.name, disableStderrLogger=disableStdErrorLogger)
         logzero.logger.debug("debug1")  # will be logged
 
         # Reconfigure with loglevel INFO
-        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO)
+        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO, disableStderrLogger=disableStdErrorLogger)
         logzero.logger.debug("debug2")  # will not be logged
         logzero.logger.info("info1")  # will be logged
 
         # Reconfigure with a different formatter
         log_format = '%(color)s[xxx]%(end_color)s %(message)s'
         formatter = logzero.LogFormatter(fmt=log_format)
-        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO, formatter=formatter)
+        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO, formatter=formatter, disableStderrLogger=disableStdErrorLogger)
 
         logzero.logger.info("info2")  # will be logged with new formatter
         logzero.logger.debug("debug3")  # will not be logged
 
         with open(temp.name) as f:
             content = f.read()
-            assert "] debug1" in content
-            assert "] debug2" not in content
-            assert "] info1" in content
-            assert "xxx] info2" in content
-            assert "] debug3" not in content
+            test_default_logger_output(content)
 
     finally:
         temp.close()
+
+
+@pytest.mark.skip(reason="not a standalone test")
+def test_default_logger_output(content):
+    assert "] debug1" in content
+    assert "] debug2" not in content
+    assert "] info1" in content
+    assert "xxx] info2" in content
+    assert "] debug3" not in content
 
 
 def test_setup_logger_reconfiguration():
@@ -263,3 +269,21 @@ def test_log_function_call():
     assert example.__name__ == "example"
     assert example.__doc__ == "example doc"
 
+
+def test_default_logger_logfile_only(capsys):
+    """
+    Run the ``test_default_logger`` with ``disableStdErrorLogger`` set to ``True`` and
+    confirm that no data is written to stderr
+    """
+    test_default_logger(disableStdErrorLogger=True)
+    out, err = capsys.readouterr()
+    assert err == ''
+
+
+def test_default_logger_stderr_output(capsys):
+    """
+    Run the ``test_default_logger`` and confirm that the proper data is written to stderr
+    """
+    test_default_logger()
+    out, err = capsys.readouterr()
+    test_default_logger_output(err)
