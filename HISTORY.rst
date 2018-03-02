@@ -2,7 +2,7 @@
 History
 =======
 
-1.3.1 (2018-03-02)
+1.4.0 (2018-03-02)
 ------------------
 * Allow Disabling stderr Output (`PR 83 <https://github.com/metachris/logzero/pull/83>`_)
 
