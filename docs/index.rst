@@ -156,6 +156,9 @@ and setting a minimum loglevel.
     # Set a logfile (all future log messages are also saved there)
     logzero.logfile("/tmp/logfile.log")
 
+    # Set a logfile (all future log messages are also saved there), but disable the default stderr logging
+    logzero.logfile("/tmp/logfile.log", disableStderrLogger=True)
+
     # You can also set a different loglevel for the file handler
     logzero.logfile("/tmp/logfile.log", loglevel=logging.ERROR)
 
@@ -182,10 +185,14 @@ Instead of using the default logger you can also setup specific logger instances
     from logzero import setup_logger
     logger1 = setup_logger(name="mylogger1", logfile="/tmp/test-logger1.log", level=logging.INFO)
     logger2 = setup_logger(name="mylogger2", logfile="/tmp/test-logger2.log", level=logging.INFO)
+    logger3 = setup_logger(name="mylogger3", logfile="/tmp/test-logger3.log", level=logging.INFO, disableStderrLogger=True)
 
     # By default, logging
     logger1.info("info for logger 1")
     logger2.info("info for logger 2")
+
+    # log to a file only, excluding the default stderr logger
+    logger3.info("info for logger 3")
 
 
 Adding custom handlers (eg. SysLogHandler)
