@@ -50,6 +50,7 @@ via https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checkli
     # Push
     git push && git push --tags
 
+Update conda-forge: https://github.com/metachris/logzero/issues/67#issuecomment-353016366
 
 Credits
 ---------

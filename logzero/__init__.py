@@ -48,7 +48,7 @@ except ImportError:
 
 __author__ = """Chris Hager"""
 __email__ = 'chris@linuxuser.at'
-__version__ = '1.3.1'
+__version__ = '1.4.0'
 
 # Python 2+3 compatibility settings for logger
 bytes_type = bytes
@@ -84,7 +84,7 @@ if os.name == 'nt':
     colorama_init()
 
 
-def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None):
+def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False):
     """
     Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
@@ -108,6 +108,7 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
     :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
     :arg int fileLoglevel: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ for the file logger (is not set, it will use the loglevel from the ``level`` argument)
+    :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
     :return: A fully configured Python logging `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_ you can use with ``.debug("msg")``, etc.
     """
     _logger = logging.getLogger(name or __name__)
@@ -115,27 +116,31 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
     _logger.setLevel(level)
 
     # Reconfigure existing handlers
-    has_stream_handler = False
+    stderr_stream_handler = None
     for handler in list(_logger.handlers):
-        if isinstance(handler, logging.StreamHandler):
-            has_stream_handler = True
-
-        if isinstance(handler, logging.FileHandler) and hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
-            # Internal FileHandler needs to be removed and re-setup to be able
-            # to set a new logfile.
-            _logger.removeHandler(handler)
-            continue
+        if hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
+            if isinstance(handler, logging.FileHandler):
+                # Internal FileHandler needs to be removed and re-setup to be able
+                # to set a new logfile.
+                _logger.removeHandler(handler)
+                continue
+            elif isinstance(handler, logging.StreamHandler):
+                stderr_stream_handler = handler
 
         # reconfigure handler
         handler.setLevel(level)
         handler.setFormatter(formatter or LogFormatter())
 
-    if not has_stream_handler:
-        stream_handler = logging.StreamHandler()
-        setattr(stream_handler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
-        stream_handler.setLevel(level)
-        stream_handler.setFormatter(formatter or LogFormatter())
-        _logger.addHandler(stream_handler)
+    # remove the stderr handler (stream_handler) if disabled
+    if disableStderrLogger:
+        if stderr_stream_handler is not None:
+            _logger.removeHandler(stderr_stream_handler)
+    elif stderr_stream_handler is None:
+        stderr_stream_handler = logging.StreamHandler()
+        setattr(stderr_stream_handler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
+        stderr_stream_handler.setLevel(level)
+        stderr_stream_handler.setFormatter(formatter or LogFormatter())
+        _logger.addHandler(stderr_stream_handler)
 
     if logfile:
         rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
@@ -286,7 +291,7 @@ def _safe_unicode(s):
         return repr(s)
 
 
-def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0):
+def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, disableStderrLogger=False):
     """
     Deprecated. Use `logzero.loglevel(..)`, `logzero.logfile(..)`, etc.
 
@@ -305,9 +310,10 @@ def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None, maxB
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
     :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
+    :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
     """
     global logger
-    logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=logfile, level=level, formatter=formatter)
+    logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=logfile, level=level, formatter=formatter, disableStderrLogger=disableStderrLogger)
     return logger
 
 
@@ -376,7 +382,7 @@ def formatter(formatter, update_custom_handlers=False):
     _formatter = formatter
 
 
-def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encoding=None, loglevel=None):
+def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encoding=None, loglevel=None, disableStderrLogger=False):
     """
     Setup logging to file (using a `RotatingFileHandler <https://docs.python.org/2/library/logging.handlers.html#rotatingfilehandler>`_ internally).
 
@@ -400,11 +406,15 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
     :arg string encoding: Used to open the file with that encoding.
     :arg int loglevel: Set a custom loglevel for the file logger, else uses the current global loglevel.
+    :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
     """
     # Step 1: If an internal RotatingFileHandler already exists, remove it
     for handler in list(logger.handlers):
-        if isinstance(handler, RotatingFileHandler) and hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
-            logger.removeHandler(handler)
+        if hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
+            if isinstance(handler, RotatingFileHandler):
+                logger.removeHandler(handler)
+            elif isinstance(handler, logging.StreamHandler) and disableStderrLogger:
+                logger.removeHandler(handler)
 
     # Step 2: If wanted, add the RotatingFileHandler now
     if filename:
