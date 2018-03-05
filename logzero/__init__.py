@@ -39,7 +39,7 @@ import os
 import sys
 import logging
 from logzero.colors import Fore as ForegroundColors
-from logging.handlers import RotatingFileHandler
+from logging.handlers import RotatingFileHandler, SysLogHandler
 
 try:
     import curses  # type: ignore
@@ -409,12 +409,7 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
     :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
     """
     # Step 1: If an internal RotatingFileHandler already exists, remove it
-    for handler in list(logger.handlers):
-        if hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
-            if isinstance(handler, RotatingFileHandler):
-                logger.removeHandler(handler)
-            elif isinstance(handler, logging.StreamHandler) and disableStderrLogger:
-                logger.removeHandler(handler)
+    remove_internal_loggers(logger, disableStderrLogger)
 
     # Step 2: If wanted, add the RotatingFileHandler now
     if filename:
@@ -429,6 +424,37 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
         rotating_filehandler.setLevel(loglevel or _loglevel)
         rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
         logger.addHandler(rotating_filehandler)
+
+
+def remove_internal_loggers(logger_to_update, disableStderrLogger=True):
+    """
+    Remove the internal loggers (e.g. stderr logger and file logger) from the specific logger
+    :param logger_to_update: the logger to remove internal loggers from
+    :param disableStderrLogger: should the default stderr logger be disabled? defaults to True
+    """
+    for handler in list(logger_to_update.handlers):
+        if hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
+            if isinstance(handler, RotatingFileHandler):
+                logger_to_update.removeHandler(handler)
+            elif isinstance(handler, logging.StreamHandler) and disableStderrLogger:
+                logger_to_update.removeHandler(handler)
+
+
+def syslog(logger_to_update=logger, facility=SysLogHandler.LOG_USER, disableStderrLogger=True):
+    """
+    Setup logging to syslog and disable other internal loggers
+    :param logger_to_update: the logger to enable syslog logging for
+    :param facility: syslog facility to log to
+    :param disableStderrLogger: should the default stderr logger be disabled? defaults to True
+    :return the new SysLogHandler, which can be modified externally (e.g. for custom log level)
+    """
+    # remove internal loggers
+    remove_internal_loggers(logger_to_update, disableStderrLogger)
+
+    # Setup logzero to only use the syslog handler with the specified facility
+    syslog_handler = SysLogHandler(facility=facility)
+    logger_to_update.addHandler(syslog_handler)
+    return syslog_handler
 
 
 def log_function_call(func):
