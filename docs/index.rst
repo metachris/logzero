@@ -137,6 +137,8 @@ and setting a minimum loglevel.
 +-----------------------------------------+--------------------------------------------------+
 | Disable logging to a logfile            | `logzero.logfile(None) <#i-logzero-logfile>`_    |
 +-----------------------------------------+--------------------------------------------------+
+| Log to syslog                           | `logzero.syslog(...) <#i-logzero-logfile>`_      |
++-----------------------------------------+--------------------------------------------------+
 | Use a custom formatter                  | `logzero.formatter(..) <#i-logzero-formatter>`_  |
 +-----------------------------------------+--------------------------------------------------+
 
@@ -168,6 +170,12 @@ and setting a minimum loglevel.
     # Disable logging to a file
     logzero.logfile(None)
 
+    # Log to syslog, using default logzero logger and 'user' syslog facility
+    logzero.syslog()
+
+    # Log to syslog, using default logzero logger and 'local0' syslog facility
+    logzero.syslog(facility=SysLogHandler.LOG_LOCAL0)
+
     # Set a custom formatter
     formatter = logging.Formatter('%(name)s - %(asctime)-15s - %(levelname)s: %(message)s');
     logzero.formatter(formatter)
@@ -195,27 +203,27 @@ Instead of using the default logger you can also setup specific logger instances
     logger3.info("info for logger 3")
 
 
-Adding custom handlers (eg. SysLogHandler)
+Adding custom handlers (eg. SocketHandler)
 ------------------------------------------
 
 Since `logzero` uses the standard `Python logger object <https://docs.python.org/2/library/logging.html#module-level-functions>`_,
 you can attach any `Python logging handlers <https://docs.python.org/2/library/logging.handlers.html>`_ you can imagine!
 
-This is how you add a `SysLogHandler <https://docs.python.org/2/library/logging.handlers.html#sysloghandler>`_:
+This is how you add a `SocketHandler <https://docs.python.org/2/library/logging.handlers.html#sockethandler>`_:
 
 .. code-block:: python
 
     import logzero
     import logging
-    from logging.handlers import SysLogHandler
+    from logging.handlers import SocketHandler
 
-    # Setup the RotatingFileHandler
-    syslog_handler = SysLogHandler(address=('localhost', logging.SYSLOG_UDP_PORT))
-    syslog_handler.setLevel(logging.DEBUG)
-    syslog_handler.setFormatter(logzero.LogFormatter(color=False))
+    # Setup the SocketHandler
+    socket_handler = SocketHandler(address=('localhost', logging.DEFAULT_TCP_LOGGING_PORT))
+    socket_handler.setLevel(logging.DEBUG)
+    socket_handler.setFormatter(logzero.LogFormatter(color=False))
 
     # Attach it to the logzero default logger
-    logzero.logger.addHandler(syslog_handler)
+    logzero.logger.addHandler(socket_handler)
 
     # Log messages
     logzero.logger.info("this is a test")
