@@ -13,7 +13,7 @@ with open('HISTORY.rst') as history_file:
 
 setup(
     name='logzero',
-    version='1.4.0',
+    version='1.5.0',
     description="Robust and effective logging for Python 2 and 3",
     long_description=readme + '\n\n' + history,
     author="Chris Hager",
