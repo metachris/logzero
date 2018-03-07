@@ -287,3 +287,15 @@ def test_default_logger_stderr_output(capsys):
     test_default_logger()
     out, err = capsys.readouterr()
     test_default_logger_output(err)
+
+
+def test_default_logger_syslog_only(capsys):
+    """
+    Run a test logging to ``syslog`` and confirm that no data is written to stderr.
+    Note that the output in syslog is not currently being captured or checked.
+    """
+    logzero.reset_default_logger()
+    logzero.syslog()
+    logzero.logger.error('debug')
+    out, err = capsys.readouterr()
+    assert out == '' and err == ''
