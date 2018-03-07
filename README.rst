@@ -16,9 +16,12 @@ logzero
     :alt: Documentation Status
 
 .. image:: https://pyup.io/repos/github/metachris/logzero/shield.svg
-     :target: https://pyup.io/repos/github/metachris/logzero/
-     :alt: Updates
+    :target: https://pyup.io/repos/github/metachris/logzero/
+    :alt: Updates
 
+.. image:: https://anaconda.org/conda-forge/logzero/badges/version.svg
+    :target: https://anaconda.org/conda-forge/logzero
+    :alt: Anaconda-Server Badge
 
 Robust and effective logging for Python 2 and 3.
 
@@ -139,6 +142,13 @@ Install `logzero` with `pip`_:
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
+
+Alternatively, if you use the `Anaconda distribution <https://www.anaconda.com/download/>`_:
+
+.. code-block:: console
+
+    $ conda config --add channels conda-forge
+    $ conda install logzero
 
 You can also install `logzero` from the public `Github repo`_:
 
