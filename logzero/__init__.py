@@ -165,7 +165,8 @@ class LogFormatter(logging.Formatter):
         logging.DEBUG: ForegroundColors.CYAN,
         logging.INFO: ForegroundColors.GREEN,
         logging.WARNING: ForegroundColors.YELLOW,
-        logging.ERROR: ForegroundColors.RED
+        logging.ERROR: ForegroundColors.LIGHTRED_EX,
+        logging.CRITICAL: ForegroundColors.LIGHTMAGENTA_EX
     }
 
     def __init__(self,
@@ -422,7 +423,12 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
 
         # Configure the handler and add it to the logger
         rotating_filehandler.setLevel(loglevel or _loglevel)
-        rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
+
+        if isinstance(formatter, LogFormatter):
+            rotating_filehandler.setFormatter(LogFormatter(fmt=formatter._fmt,color=False))
+        else:
+            rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
+
         logger.addHandler(rotating_filehandler)
 
 
