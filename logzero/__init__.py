@@ -240,9 +240,8 @@ class LogFormatter(logging.Formatter):
             # each line separately so that non-utf8 bytes don't cause
             # all the newlines to turn into '\n'.
             lines = [formatted.rstrip()]
-            lines.extend(
-                _safe_unicode(ln) for ln in record.exc_text.split('\n'))
-            formatted = '\n'.join(lines)
+            lines.extend("\t"*5 + _safe_unicode(ln) for ln in record.exc_text.split('\n'))
+            formatted = '\n'.join(lines) + "\n"
         return formatted.replace("\n", "\n    ")
 
 
