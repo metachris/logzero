@@ -70,6 +70,7 @@ Example Usage
     logger.info("info")
     logger.warn("warn")
     logger.error("error")
+    logger.critical("critical")
 
     # This is how you'd log an exception
     try:
