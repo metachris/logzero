@@ -7,10 +7,7 @@ trigger:
 - master
 
 pool:
-  name: p1    # your job runs on an agent in this pool
-  demands: agent.os -equals Windows_NT    # the agent must have this capability to run the job
+  vmImage: 'ubuntu-16.04'
 steps:
-- script: echo hello world
-
-
+- bash: echo "Hello world"
 
