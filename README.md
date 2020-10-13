@@ -1,33 +1,18 @@
-=======
-logzero
-=======
+# logzero
 
+[![Latest version on PyPi](https://img.shields.io/pypi/v/logzero.svg)](https://pypi.python.org/pypi/logzero)
 
-.. image:: https://img.shields.io/pypi/v/logzero.svg
-    :target: https://pypi.python.org/pypi/logzero
-    :alt: Latest version on PyPi
+[![Build status for master branch](https://travis-ci.org/metachris/logzero.svg?branch=master)](https://travis-ci.org/metachris/logzero)
 
-.. image:: https://travis-ci.org/metachris/logzero.svg?branch=master
-    :target: https://travis-ci.org/metachris/logzero
-    :alt: Build status for master branch
+[![Documentation Status](https://readthedocs.org/projects/logzero/badge/?version=latest)](https://logzero.readthedocs.io/en/latest/?badge=latest)
 
-.. image:: https://readthedocs.org/projects/logzero/badge/?version=latest
-    :target: https://logzero.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
+[![Updates](https://pyup.io/repos/github/metachris/logzero/shield.svg)](https://pyup.io/repos/github/metachris/logzero/)
 
-.. image:: https://pyup.io/repos/github/metachris/logzero/shield.svg
-    :target: https://pyup.io/repos/github/metachris/logzero/
-    :alt: Updates
-
-.. image:: https://anaconda.org/conda-forge/logzero/badges/version.svg
-    :target: https://anaconda.org/conda-forge/logzero
-    :alt: Anaconda-Server Badge
+[![Anaconda-Server Badge](https://anaconda.org/conda-forge/logzero/badges/version.svg)](https://anaconda.org/conda-forge/logzero)
 
 Robust and effective logging for Python 2 and 3.
 
-.. image:: https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/logo-small.png
-   :alt: Logo
-   :width: 300px
+![Logo](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/logo-small.png)
 
 * Documentation: https://logzero.readthedocs.io
 * GitHub: https://github.com/metachris/logzero
