@@ -38,6 +38,7 @@ Features
 
 * Easy logging to console and/or (rotating) file.
 * Provides a fully configured standard `Python logger object <https://docs.python.org/2/library/logging.html#module-level-functions>`_.
+* No dependencies (except on Windows `colorama` for color output)
 * Pretty formatting, including level-specific colors in the console.
 * Windows color output supported by `colorama`_
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
@@ -164,6 +165,40 @@ On openSUSE you can install the current version from repos: `python2-logzero <ht
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 .. _Github repo: https://github.com/metachris/logzero
 
+
+Development
+-----------
+
+* This project is using pytest
+
+Getting started
+
+```
+# Activate virtualenv
+$ python3 -m venv venv
+$ . venv/bin/activate
+
+# Install main and dev dependencies
+$ pip install -e .
+$ pip install -r requirements_dev.txt
+
+# Run the tests
+$ make test
+
+# Run the linter
+$ make lint
+
+# Generate the docs (will auto-open in Chrome)
+$ make docs
+```
+
+### To do
+
+* Update dependencies
+* add github workflow for CI
+* test with every python version
+
+---
 
 Changelog
 ---------
