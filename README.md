@@ -160,12 +160,6 @@ $ make lint
 $ make docs
 ```
 
-#### To do
-
-* Update dependencies
-* add github workflow for CI
-* test with every python version
-
 ---
 
 Changelog
