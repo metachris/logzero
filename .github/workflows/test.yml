@@ -4,7 +4,7 @@ name: Run the tests
 on: [push]
 
 jobs:
-  build_and_test:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:

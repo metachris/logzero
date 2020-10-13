@@ -4,7 +4,7 @@ name: Generate the docs
 on: [push]
 
 jobs:
-  build_and_test:
+  generate_docs:
     runs-on: ubuntu-latest
 
     steps:

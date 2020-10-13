@@ -1,10 +1,10 @@
 # Note: to test with Python 2.7, a downgrade in pytest is necessary - last supported is 4.6 series https://docs.pytest.org/en/stable/py27-py34-deprecation.html
-name: Generate the docs
+name: Lint the code
 
 on: [push]
 
 jobs:
-  build_and_test:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
