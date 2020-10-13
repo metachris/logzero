@@ -1,0 +1,24 @@
+# Note: to test with Python 2.7, a downgrade in pytest is necessary - last supported is 4.6 series https://docs.pytest.org/en/stable/py27-py34-deprecation.html
+name: Generate the docs
+
+on: [push]
+
+jobs:
+  generate_docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          # Semantic version range syntax or exact version of a Python version
+          python-version: '3.x'
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements_dev.txt
+      - name: Generate the docs
+        run: make docs
