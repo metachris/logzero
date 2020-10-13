@@ -1,35 +1,24 @@
 # Note: to test with Python 2.7, a downgrade in pytest is necessary - last supported is 4.6 series https://docs.pytest.org/en/stable/py27-py34-deprecation.html
-name: Run the tests
+name: Generate the docs
 
 on: [push]
 
 jobs:
   build_and_test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [3.5, 3.6, 3.7, 3.8]
 
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python ${{ matrix.python-version }}
+      - name: Set up Python 3.x
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          # Semantic version range syntax or exact version of a Python version
+          python-version: '3.x'
+      - name: Display Python version
+        run: python -c "import sys; print(sys.version)"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements_dev.txt
-
-      - name: Lint
-        run: make lint
-
-  # pip install flake8 pytest
-  # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
       - name: Generate the docs
         run: make docs
-
-      - name: Run the tests
-        run: make test
-
