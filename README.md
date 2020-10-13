@@ -1,8 +1,8 @@
 # logzero
 
-[![Latest version on PyPi](https://img.shields.io/pypi/v/logzero.svg)](https://pypi.python.org/pypi/logzero)
-[![Build status for master branch](https://travis-ci.org/metachris/logzero.svg?branch=master)](https://travis-ci.org/metachris/logzero)
+![Build status for master branch](https://github.com/metachris/logzero/workflows/Run%20the%20tests/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/logzero/badge/?version=latest)](https://logzero.readthedocs.io/en/latest/?badge=latest)
+[![Latest version on PyPi](https://img.shields.io/pypi/v/logzero.svg)](https://pypi.python.org/pypi/logzero)
 [![Updates](https://pyup.io/repos/github/metachris/logzero/shield.svg)](https://pyup.io/repos/github/metachris/logzero/)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/logzero/badges/version.svg)](https://anaconda.org/conda-forge/logzero)
 
