@@ -115,6 +115,13 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
     _logger.propagate = False
     _logger.setLevel(level)
 
+    # This will setup console formating with color
+    # Could have used formatter method from line no 365 but the method "formatter" and a argument of this function "formatter" has same name.
+    # So when referencing "formatter" here will fetch that argument not the function from line no 365
+    global _formatter
+    if formatter is not None:
+        _formatter = formatter
+
     # Reconfigure existing handlers
     stderr_stream_handler = None
     for handler in list(_logger.handlers):
@@ -146,7 +153,9 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
         rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
         setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         rotating_filehandler.setLevel(fileLoglevel or level)
-        rotating_filehandler.setFormatter(formatter or LogFormatter(color=False))
+        # Below code will pass the default formatter with color=False configuration 
+        # so as to stop writing color codes in logfile which was warned by line no 380
+        rotating_filehandler.setFormatter(LogFormatter(color=False, fmt=_formatter._fmt, datefmt=_formatter.datefmt, colors=_formatter._colors))
         _logger.addHandler(rotating_filehandler)
 
     return _logger
@@ -411,6 +420,18 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
     # Step 1: If an internal RotatingFileHandler already exists, remove it
     __remove_internal_loggers(logger, disableStderrLogger)
 
+    # This will setup console formating with color
+    # Could have used formatter method from line no 373 but the method "formatter" and a argument of this function "formatter" has same name.
+    # So when referencing "formatter" here will fetch that argument not the function from line no 373
+    global _formatter
+    if formatter is not None:
+        _formatter = formatter
+
+    # The below code will modify the console logger formatter
+    for handler in list(logger.handlers):
+        handler.setFormatter(formatter or LogFormatter())
+        
+
     # Step 2: If wanted, add the RotatingFileHandler now
     if filename:
         rotating_filehandler = RotatingFileHandler(filename, mode=mode, maxBytes=maxBytes, backupCount=backupCount, encoding=encoding)
@@ -422,7 +443,11 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
 
         # Configure the handler and add it to the logger
         rotating_filehandler.setLevel(loglevel or _loglevel)
-        rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
+
+        # Below code will pass the default formatter with color=False configuration 
+        # so as to stop writing color codes in logfile which was warned by line no 380
+        rotating_filehandler.setFormatter(LogFormatter(color=False, fmt=_formatter._fmt, datefmt=_formatter.datefmt, colors=_formatter._colors))
+        
         logger.addHandler(rotating_filehandler)
 
 
