@@ -165,7 +165,8 @@ class LogFormatter(logging.Formatter):
         logging.DEBUG: ForegroundColors.CYAN,
         logging.INFO: ForegroundColors.GREEN,
         logging.WARNING: ForegroundColors.YELLOW,
-        logging.ERROR: ForegroundColors.RED
+        logging.ERROR: ForegroundColors.RED,
+        logging.CRITICAL: ForegroundColors.RED
     }
 
     def __init__(self,
