@@ -249,7 +249,7 @@ def test_setup_logger_logfile_custom_loglevel(capsys):
     try:
         logger = logzero.setup_logger(logfile=temp.name, fileLoglevel=logging.WARN)
         logger.info("info1")
-        logger.warn("warn1")
+        logger.warning("warn1")
 
         with open(temp.name) as f:
             content = f.read()
@@ -299,3 +299,25 @@ def test_default_logger_syslog_only(capsys):
     logzero.logger.error('debug')
     out, err = capsys.readouterr()
     assert out == '' and err == ''
+
+
+def test_logfile_lower_loglevel(capsys):
+    """
+    logzero.logfile(..) should work with a lower loglevel than the StreamHandler
+    """
+    logzero.reset_default_logger()
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logzero.loglevel(level=logging.INFO)
+        logzero.logfile(temp.name, loglevel=logging.DEBUG)
+
+        logzero.logger.debug("debug")
+        logzero.logger.info("info")
+
+        with open(temp.name) as f:
+            content = f.read()
+            assert "] debug" in content
+            assert "] info" in content
+
+    finally:
+        temp.close()

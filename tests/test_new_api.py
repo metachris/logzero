@@ -56,7 +56,7 @@ def test_api_loglevel(capsys):
         logzero.logger.info("info1")
         logzero.loglevel(logging.WARN)
         logzero.logger.info("info2")
-        logzero.logger.warn("warn1")
+        logzero.logger.warning("warn1")
 
         with open(temp.name) as f:
             content = f.read()
@@ -81,7 +81,7 @@ def test_api_loglevel_custom_handlers(capsys):
     #     logzero.logger.info("info1")
     #     logzero.loglevel(logging.WARN)
     #     logzero.logger.info("info2")
-    #     logzero.logger.warn("warn1")
+    #     logzero.logger.warning("warn1")
 
     #     with open(temp.name) as f:
     #         content = f.read()
@@ -133,13 +133,13 @@ def test_api_logfile_custom_loglevel():
         # Set logfile with custom loglevel
         logzero.logfile(temp.name, loglevel=logging.WARN)
         logzero.logger.info("info1")
-        logzero.logger.warn("warn1")
+        logzero.logger.warning("warn1")
 
         # If setting a loglevel with logzero.loglevel(..) it will not overwrite
         # the custom loglevel of the file handler
         logzero.loglevel(logging.INFO)
         logzero.logger.info("info2")
-        logzero.logger.warn("warn2")
+        logzero.logger.warning("warn2")
 
         with open(temp.name) as f:
             content = f.read()
