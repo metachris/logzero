@@ -299,3 +299,18 @@ def test_default_logger_syslog_only(capsys):
     logzero.logger.error('debug')
     out, err = capsys.readouterr()
     assert out == '' and err == ''
+
+
+def test_root_logger(capsys):
+    """
+    Test creating a root logger
+    """
+    logzero.reset_default_logger()
+    logger1 = logzero.setup_logger()
+    assert logger1.name == 'logzero'
+
+    logger2 = logzero.setup_logger(isRootLogger=True)
+    assert logger2.name == 'root'
+
+    logger3 = logzero.setup_logger(name='')
+    assert logger3.name == 'root'
