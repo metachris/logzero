@@ -5,6 +5,7 @@ __pycache__/
 .venv*
 venv*
 /test.py
+_tests/
 
 # C extensions
 *.so

@@ -39,6 +39,8 @@ import os
 import sys
 import logging
 from logzero.colors import Fore as ForegroundColors
+from logzero.jsonlogger import JsonFormatter
+
 from logging.handlers import RotatingFileHandler, SysLogHandler
 
 try:
@@ -95,7 +97,7 @@ if os.name == 'nt':
     colorama_init()
 
 
-def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False):
+def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False, json=False):
     """
     Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
@@ -120,7 +122,8 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
     :arg int fileLoglevel: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ for the file logger (is not set, it will use the loglevel from the ``level`` argument)
     :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
-    :arg bool isRootLogger: If True then returns a root logger. Defaults to False. (see also the `Python docs <https://docs.python.org/3/library/logging.html#logging.getLogger>`_)
+    :arg bool isRootLogger: If True then returns a root logger. Defaults to False. (see also the `Python docs <https://docs.python.org/3/library/logging.html#logging.getLogger>`_).
+    :arg bool json: If True then log in JSON format. Defaults to False. (uses `python-json-logger <https://github.com/madzak/python-json-logger>`_).
     :return: A fully configured Python logging `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_ you can use with ``.debug("msg")``, etc.
     """
     _logger = logging.getLogger(None if isRootLogger else name)
@@ -129,6 +132,9 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
     # set the minimum level needed for the logger itself (the lowest handler level)
     minLevel = fileLoglevel if fileLoglevel and fileLoglevel < level else level
     _logger.setLevel(minLevel)
+
+    # Setup default formatter
+    _formatter = JsonFormatter() if json else formatter or LogFormatter()
 
     # Reconfigure existing handlers
     stderr_stream_handler = None
@@ -144,7 +150,7 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
 
         # reconfigure handler
         handler.setLevel(level)
-        handler.setFormatter(formatter or LogFormatter())
+        handler.setFormatter(_formatter)
 
     # remove the stderr handler (stream_handler) if disabled
     if disableStderrLogger:
@@ -154,14 +160,14 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
         stderr_stream_handler = logging.StreamHandler()
         setattr(stderr_stream_handler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         stderr_stream_handler.setLevel(level)
-        stderr_stream_handler.setFormatter(formatter or LogFormatter())
+        stderr_stream_handler.setFormatter(_formatter)
         _logger.addHandler(stderr_stream_handler)
 
     if logfile:
         rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
         setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         rotating_filehandler.setLevel(fileLoglevel or level)
-        rotating_filehandler.setFormatter(formatter or LogFormatter(color=False))
+        rotating_filehandler.setFormatter(_formatter)
         _logger.addHandler(rotating_filehandler)
 
     return _logger
@@ -472,6 +478,13 @@ def syslog(logger_to_update=logger, facility=SysLogHandler.LOG_USER, disableStde
     setattr(syslog_handler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
     logger_to_update.addHandler(syslog_handler)
     return syslog_handler
+
+
+def json(enable=True, update_custom_handlers=False):
+    """
+    Enable/disable json logging for all handlers.
+    """
+    formatter(JsonFormatter(), update_custom_handlers=update_custom_handlers)
 
 
 def log_function_call(func):
