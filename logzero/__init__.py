@@ -113,7 +113,10 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
     """
     _logger = logging.getLogger(name or __name__)
     _logger.propagate = False
-    _logger.setLevel(level)
+
+    # set the minimum level needed for the logger itself (the lowest handler level)
+    minLevel = fileLoglevel if fileLoglevel and fileLoglevel < level else level
+    _logger.setLevel(minLevel)
 
     # Reconfigure existing handlers
     stderr_stream_handler = None

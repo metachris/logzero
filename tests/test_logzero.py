@@ -321,3 +321,20 @@ def test_logfile_lower_loglevel(capsys):
 
     finally:
         temp.close()
+
+
+def test_logfile_lower_loglevel_setup_logger(capsys):
+    """
+    logzero.setup_logger(..) should work with a lower loglevel than the StreamHandler
+    """
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logger = logzero.setup_logger(level=logging.INFO, logfile=temp.name, fileLoglevel=logging.DEBUG)
+        logger.debug("debug")
+        logger.info("info")
+        with open(temp.name) as f:
+            content = f.read()
+            assert "] debug" in content
+            assert "] info" in content
+    finally:
+        temp.close()
