@@ -134,7 +134,7 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
     _logger.setLevel(minLevel)
 
     # Setup default formatter
-    _formatter = JsonFormatter() if json else formatter or LogFormatter()
+    _formatter = _get_json_formatter() if json else formatter or LogFormatter()
 
     # Reconfigure existing handlers
     stderr_stream_handler = None
@@ -340,6 +340,13 @@ def reset_default_logger():
     _loglevel = logging.DEBUG
     _logfile = None
     _formatter = None
+
+    # Remove all handlers on exiting logger
+    if logger:
+        for handler in list(logger.handlers):
+            logger.removeHandler(handler)
+
+    # Resetup
     logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=_logfile, level=_loglevel, formatter=_formatter)
 
 
@@ -484,7 +491,31 @@ def json(enable=True, update_custom_handlers=False):
     """
     Enable/disable json logging for all handlers.
     """
-    formatter(JsonFormatter(), update_custom_handlers=update_custom_handlers)
+
+    formatter(_get_json_formatter() if json else LogFormatter(), update_custom_handlers=update_custom_handlers)
+
+
+def _get_json_formatter():
+    supported_keys = [
+        'asctime',
+        'filename',
+        'funcName',
+        'levelname',
+        'levelno',
+        'lineno',
+        'module',
+        'message',
+        'name',
+        'pathname',
+        'process',
+        'processName',
+        'threadName'
+    ]
+
+    def log_format(x):
+        return ['%({0:s})s'.format(i) for i in x]
+    custom_format = ' '.join(log_format(supported_keys))
+    return JsonFormatter(custom_format)
 
 
 def log_function_call(func):
