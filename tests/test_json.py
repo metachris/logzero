@@ -2,6 +2,7 @@
 test json related things
 """
 import json
+import tempfile
 import logzero
 
 
@@ -11,7 +12,7 @@ def _test_json_obj_content(obj):
     assert obj["message"] == "info"
     for attr in attrs:
         if attr not in obj:
-            raise Exception(f"obj missing key '{attr}'")
+            raise Exception("obj missing key '%s'" % attr)
 
 
 def test_json(capsys):
@@ -25,7 +26,7 @@ def test_json(capsys):
     _test_json_obj_content(json.loads(err))
 
 
-def test_json2(capsys):
+def test_json_default_logger(capsys):
     # Test default logger
     logzero.reset_default_logger()
     logzero.logger.info('info')
@@ -37,26 +38,18 @@ def test_json2(capsys):
     out, err = capsys.readouterr()
     _test_json_obj_content(json.loads(err))
 
-    # logzero.reset_default_logger()
-    # # logzero.reset_default_logger('xx')
-    # # logger = logzero.setup_logger()
-    # # logger.info("test log output")
-    # logzero.logger.info('test log output')
 
-    # _out, err = capsys.readouterr()
-    # assert "test log output" in err
+def test_json_logfile(capsys):
+    # Test default logger
+    logzero.reset_default_logger()
+    temp = tempfile.NamedTemporaryFile()
+    try:
+        logger = logzero.setup_logger(logfile=temp.name, json=True)
+        logger.info('info')
 
-# def test_myoutput(capsys):  # or use "capfd" for fd-level
-#     import sys
-#     print("hello")
-#     sys.stderr.write("world\n")
-#     captured = capsys.readouterr()
-#     assert captured.out == "hello\n"
-#     assert captured.err == "world\n"
-#     print("next")
-#     captured = capsys.readouterr()
-#     assert captured.out == "next\n"
+        with open(temp.name) as f:
+            content = f.read()
+            _test_json_obj_content(json.loads(content))
 
-#     logzero.logger.info('info')
-#     captured = capsys.readouterr()
-#     assert "test_json:47" in captured.err
+    finally:
+        temp.close()
