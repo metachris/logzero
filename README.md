@@ -19,17 +19,17 @@ Features
 
 * Easy logging to console and/or (rotating) file.
 * Provides a fully configured standard [Python logger object](https://docs.python.org/2/library/logging.html#module-level-functions>).
-* No dependencies (except on Windows [colorama](https://github.com/tartley/colorama) for color output)
+* No dependencies
 * Pretty formatting, including level-specific colors in the console.
 * Windows color output supported by [colorama](https://github.com/tartley/colorama)
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
-* Multiple loggers can write to the same logfile (also across multiple Python files).
+* Multiple loggers can write to the same logfile (also across multiple Python files and processes).
+* JSON logging support (with integrated [python-json-logger](https://github.com/madzak/python-json-logger))
 * Global default logger with [logzero.logger](https://logzero.readthedocs.io/en/latest/#i-logzero-logger) and custom loggers with [logzero.setup_logger(..)](https://logzero.readthedocs.io/en/latest/#i-logzero-setup-logger).
 * Compatible with Python 2 and 3.
 * All contained in a [single file](https://github.com/metachris/logzero/blob/master/logzero/__init__.py).
 * Licensed under the MIT license.
 * Heavily inspired by the [Tornado web framework](https://github.com/tornadoweb/tornado).
-
 
 ![Demo output in color](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/demo_output.png)
 
@@ -98,6 +98,59 @@ logzero.formatter(formatter)
 # Log some variables
 logger.info("var1: %s, var2: %s", var1, var2)
 ```
+
+### JSON logging
+
+JSON logging can be enabled for the default logger with `logzero.json()`, or with `setup_logger(json=True)` for custom loggers:
+
+```python
+>>> logzero.json()
+>>> logger.info("test")
+{"asctime": "2020-10-21 10:42:45,808", "filename": "<stdin>", "funcName": "<module>", "levelname": "INFO", "levelno": 20, "lineno": 1, "module": "<stdin>", "message": "test", "name": "logzero_default", "pathname": "<stdin>", "process": 76179, "processName": "MainProcess", "threadName": "MainThread"}
+
+>>> my_logger = setup_logger(json=True)
+>>> my_logger.info("test")
+{"asctime": "2020-10-21 10:42:45,808", "filename": "<stdin>", "funcName": "<module>", "levelname": "INFO", "levelno": 20, "lineno": 1, "module": "<stdin>", "message": "test", "name": "logzero_default", "pathname": "<stdin>", "process": 76179, "processName": "MainProcess", "threadName": "MainThread"}
+```
+
+The logged JSON object has these fields:
+
+```json
+{
+  "asctime": "2020-10-21 10:43:40,765",
+  "filename": "test.py",
+  "funcName": "test_this",
+  "levelname": "INFO",
+  "levelno": 20,
+  "lineno": 9,
+  "module": "test",
+  "message": "info",
+  "name": "logzero",
+  "pathname": "_tests/test.py",
+  "process": 76204,
+  "processName": "MainProcess",
+  "threadName": "MainThread"
+}```
+
+An exception logged with `logger.exception(e)` has these:
+
+```json
+{
+  "asctime": "2020-10-21 10:43:25,193",
+  "filename": "test.py",
+  "funcName": "test_this",
+  "levelname": "ERROR",
+  "levelno": 40,
+  "lineno": 17,
+  "module": "test",
+  "message": "this is a demo exception",
+  "name": "logzero",
+  "pathname": "_tests/test.py",
+  "process": 76192,
+  "processName": "MainProcess",
+  "threadName": "MainThread",
+  "exc_info": "Traceback (most recent call last):\n  File \"_tests/test.py\", line 15, in test_this\n    raise Exception(\"this is a demo exception\")\nException: this is a demo exception"
+}```
 
 Take a look at the documentation for more information and examples:
 

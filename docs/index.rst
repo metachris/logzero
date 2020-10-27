@@ -14,8 +14,9 @@ Robust and effective logging for Python 2 and 3.
 **Features**
 
 * Easy logging to console and/or (rotating) file.
-* Provides a fully configured standard `Python logger object <https://docs.python.org/2/library/logging.html#module-level-functions>`_.
+* Provides a fully configured `Python logger object <https://docs.python.org/2/library/logging.html#module-level-functions>`_.
 * Pretty formatting, including level-specific colors in the console.
+* JSON logging support (with integrated `python-json-logger <https://github.com/madzak/python-json-logger>`_)
 * Windows color output supported by `colorama`_
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
 * Multiple loggers can write to the same logfile (also works across multiple Python files).
@@ -64,7 +65,7 @@ In the newest openSUSE release you can install it with zypper: ``sudo zypper in 
 .. _colorama: https://github.com/tartley/colorama
 
 
-Example Usage
+Example usage
 =============
 
 You can use `logzero` like this (logs only to the console by default):
@@ -103,24 +104,86 @@ If this was a file called ``demo.py``, the output will look like this:
         Exception: this is a demo exception
 
 
-Rotating Logfile
+Logging to files
 ----------------
 
-Adding a rotating logfile is that easy:
+You can add logging to a (rotating) logfile like this:
 
 .. code-block:: python
 
     import logzero
     from logzero import logger
 
-    # Setup rotating logfile with 3 rotations, each with a maximum filesize of 1MB:
+    # non-rotating logfile
+    logzero.logfile("/tmp/logfile.log")
+
+    # rotating logfile
     logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1e6, backupCount=3)
 
-    # Log messages
+    # log messages
     logger.info("This log message goes to the console and the logfile")
 
 
-Advanced Usage Examples
+JSON logging
+------------
+
+JSON logging can be enabled for the default logger with `logzero.json()`, or with `setup_logger(json=True)` for custom loggers:
+
+.. code-block:: python
+
+    # Configure the default logger to output JSON
+    >>> logzero.json()
+    >>> logger.info("test")
+    {"asctime": "2020-10-21 10:42:45,808", "filename": "<stdin>", "funcName": "<module>", "levelname": "INFO", "levelno": 20, "lineno": 1, "module": "<stdin>", "message": "test", "name": "logzero_default", "pathname": "<stdin>", "process": 76179, "processName": "MainProcess", "threadName": "MainThread"}
+
+    # Configure a custom logger to output JSON
+    >>> my_logger = setup_logger(json=True)
+    >>> my_logger.info("test")
+    {"asctime": "2020-10-21 10:42:45,808", "filename": "<stdin>", "funcName": "<module>", "levelname": "INFO", "levelno": 20, "lineno": 1, "module": "<stdin>", "message": "test", "name": "logzero_default", "pathname": "<stdin>", "process": 76179, "processName": "MainProcess", "threadName": "MainThread"}
+
+The logged JSON object has these fields:
+
+.. code-block:: json
+
+    {
+        "asctime": "2020-10-21 10:43:40,765",
+        "filename": "test.py",
+        "funcName": "test_this",
+        "levelname": "INFO",
+        "levelno": 20,
+        "lineno": 9,
+        "module": "test",
+        "message": "info",
+        "name": "logzero",
+        "pathname": "_tests/test.py",
+        "process": 76204,
+        "processName": "MainProcess",
+        "threadName": "MainThread"
+    }
+
+An exception logged with `logger.exception(e)` has these:
+
+.. code-block:: json
+
+    {
+        "asctime": "2020-10-21 10:43:25,193",
+        "filename": "test.py",
+        "funcName": "test_this",
+        "levelname": "ERROR",
+        "levelno": 40,
+        "lineno": 17,
+        "module": "test",
+        "message": "this is a demo exception",
+        "name": "logzero",
+        "pathname": "_tests/test.py",
+        "process": 76192,
+        "processName": "MainProcess",
+        "threadName": "MainThread",
+        "exc_info": "Traceback (most recent call last):\n  File \"_tests/test.py\", line 15, in test_this\n    raise Exception(\"this is a demo exception\")\nException: this is a demo exception"
+    }
+
+
+Advanced usage examples
 -----------------------
 
 Here are more examples which show how to use logfiles, custom formatters
@@ -136,6 +199,8 @@ and setting a minimum loglevel.
 | Setup a rotating logfile                | `logzero.logfile(..) <#i-logzero-logfile>`_      |
 +-----------------------------------------+--------------------------------------------------+
 | Disable logging to a logfile            | `logzero.logfile(None) <#i-logzero-logfile>`_    |
++-----------------------------------------+--------------------------------------------------+
+| JSON logging                            | `logzero.json(...) <#json-logging>`_             |
 +-----------------------------------------+--------------------------------------------------+
 | Log to syslog                           | `logzero.syslog(...) <#i-logzero-logfile>`_      |
 +-----------------------------------------+--------------------------------------------------+
@@ -170,6 +235,12 @@ and setting a minimum loglevel.
     # Disable logging to a file
     logzero.logfile(None)
 
+    # Enable JSON log format
+    logzero.json()
+
+    # Disable JSON log format
+    logzero.json(False)
+
     # Log to syslog, using default logzero logger and 'user' syslog facility
     logzero.syslog()
 
@@ -183,7 +254,7 @@ and setting a minimum loglevel.
     # Log some variables
     logger.info("var1: %s, var2: %s", var1, var2)
 
-Custom Logger Instances
+Custom logger instances
 -----------------------
 
 Instead of using the default logger you can also setup specific logger instances with `logzero.setup_logger(..) <#i-logzero-setup-logger>`_:
@@ -191,16 +262,21 @@ Instead of using the default logger you can also setup specific logger instances
 .. code-block:: python
 
     from logzero import setup_logger
-    logger1 = setup_logger(name="mylogger1", logfile="/tmp/test-logger1.log", level=logging.INFO)
+    logger1 = setup_logger(name="mylogger1")
     logger2 = setup_logger(name="mylogger2", logfile="/tmp/test-logger2.log", level=logging.INFO)
     logger3 = setup_logger(name="mylogger3", logfile="/tmp/test-logger3.log", level=logging.INFO, disableStderrLogger=True)
 
-    # By default, logging
+    # Log something:
     logger1.info("info for logger 1")
     logger2.info("info for logger 2")
 
     # log to a file only, excluding the default stderr logger
     logger3.info("info for logger 3")
+
+    # JSON logging in a custom logger
+    jsonLogger = setup_logger(name="jsonLogger", json=True)
+    jsonLogger.info("info in json")
+
 
 
 Adding custom handlers (eg. SocketHandler)

@@ -11,17 +11,17 @@ import tempfile
 import logging
 
 import logzero
-import pytest
 
 
 def test_write_to_logfile_and_stderr(capsys):
     """
-    Should log to a file.
+    When using `logfile=`, should by default log to a file and stderr.
     """
     logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
+
     try:
-        logger = logzero.setup_logger(logfile=temp.name)
+        logger = logzero.setup_logger('test_write_to_logfile_and_stderr', logfile=temp.name)
         logger.info("test log output")
 
         _out, err = capsys.readouterr()
@@ -32,7 +32,6 @@ def test_write_to_logfile_and_stderr(capsys):
             content = f.read()
             assert " test_logzero:" in content
             assert content.endswith("test log output\n")
-
     finally:
         temp.close()
 
@@ -167,14 +166,13 @@ def test_default_logger(disableStdErrorLogger=False):
 
         with open(temp.name) as f:
             content = f.read()
-            test_default_logger_output(content)
+            _test_default_logger_output(content)
 
     finally:
         temp.close()
 
 
-@pytest.mark.skip(reason="not a standalone test")
-def test_default_logger_output(content):
+def _test_default_logger_output(content):
     assert "] debug1" in content
     assert "] debug2" not in content
     assert "] info1" in content
@@ -286,7 +284,7 @@ def test_default_logger_stderr_output(capsys):
     """
     test_default_logger()
     out, err = capsys.readouterr()
-    test_default_logger_output(err)
+    _test_default_logger_output(err)
 
 
 def test_default_logger_syslog_only(capsys):
