@@ -17,7 +17,7 @@ Usage:
 
     logger.debug("hello")
     logger.info("info")
-    logger.warn("warn")
+    logger.warning("warn")
     logger.error("error")
 
 In order to also log to a file, just use `logzero.logfile(..)`:
@@ -125,7 +125,10 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
     """
     _logger = logging.getLogger(None if isRootLogger else name)
     _logger.propagate = False
-    _logger.setLevel(level)
+
+    # set the minimum level needed for the logger itself (the lowest handler level)
+    minLevel = fileLoglevel if fileLoglevel and fileLoglevel < level else level
+    _logger.setLevel(minLevel)
 
     # Reconfigure existing handlers
     stderr_stream_handler = None
@@ -340,7 +343,7 @@ reset_default_logger()
 
 def loglevel(level=logging.DEBUG, update_custom_handlers=False):
     """
-    Set the minimum loglevel for the default logger (`logzero.logger`).
+    Set the minimum loglevel for the default logger (`logzero.logger`) and all handlers.
 
     This reconfigures only the internal handlers of the default logger (eg. stream and logfile).
     You can also update the loglevel for custom handlers by using `update_custom_handlers=True`.
@@ -411,22 +414,30 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
     :arg int loglevel: Set a custom loglevel for the file logger, else uses the current global loglevel.
     :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
     """
-    # Step 1: If an internal RotatingFileHandler already exists, remove it
+    # First, remove any existing file logger
     __remove_internal_loggers(logger, disableStderrLogger)
 
-    # Step 2: If wanted, add the RotatingFileHandler now
-    if filename:
-        rotating_filehandler = RotatingFileHandler(filename, mode=mode, maxBytes=maxBytes, backupCount=backupCount, encoding=encoding)
+    # If no filename supplied, all is done
+    if not filename:
+        return
 
-        # Set internal attributes on this handler
-        setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
-        if loglevel:
-            setattr(rotating_filehandler, LOGZERO_INTERNAL_HANDLER_IS_CUSTOM_LOGLEVEL, True)
+    # Now add
+    rotating_filehandler = RotatingFileHandler(filename, mode=mode, maxBytes=maxBytes, backupCount=backupCount, encoding=encoding)
 
-        # Configure the handler and add it to the logger
-        rotating_filehandler.setLevel(loglevel or _loglevel)
-        rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
-        logger.addHandler(rotating_filehandler)
+    # Set internal attributes on this handler
+    setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
+    if loglevel:
+        setattr(rotating_filehandler, LOGZERO_INTERNAL_HANDLER_IS_CUSTOM_LOGLEVEL, True)
+
+    # Configure the handler and add it to the logger
+    rotating_filehandler.setLevel(loglevel or _loglevel)
+    rotating_filehandler.setFormatter(formatter or _formatter or LogFormatter(color=False))
+    logger.addHandler(rotating_filehandler)
+
+    # If wanting to use a lower loglevel for the file handler, we need to reconfigure the logger level
+    # (note: this won't change the StreamHandler loglevel)
+    if loglevel and loglevel < logger.level:
+        logger.setLevel(loglevel)
 
 
 def __remove_internal_loggers(logger_to_update, disableStderrLogger=True):

@@ -42,7 +42,7 @@ from logzero import logger
 
 logger.debug("hello")
 logger.info("info")
-logger.warn("warn")
+logger.warning("warn")
 logger.error("error")
 
 # This is how you'd log an exception
@@ -137,7 +137,11 @@ On openSUSE you can install the current version from repos: [python2-logzero](ht
 Development
 -----------
 
-Note: this project is using pytest. CI is run with [Github actions](https://github.com/metachris/logzero/tree/master/.github/workflows).
+Notes:
+
+* Using pytest as test runner
+* CI is run with [Github actions](https://github.com/metachris/logzero/tree/master/.github/workflows).
+* Download stats: https://pepy.tech/project/logzero
 
 ### Getting started
 
@@ -159,6 +163,11 @@ $ make lint
 # Generate the docs (will auto-open in Chrome)
 $ make docs
 ```
+
+**To do**
+
+* CI to publish package to PyPI
+
 
 ---
 
