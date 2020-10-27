@@ -492,7 +492,7 @@ def json(enable=True, update_custom_handlers=False):
     Enable/disable json logging for all handlers.
     """
 
-    formatter(_get_json_formatter() if json else LogFormatter(), update_custom_handlers=update_custom_handlers)
+    formatter(_get_json_formatter() if enable else LogFormatter(), update_custom_handlers=update_custom_handlers)
 
 
 def _get_json_formatter():

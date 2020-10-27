@@ -38,6 +38,11 @@ def test_json_default_logger(capsys):
     out, err = capsys.readouterr()
     _test_json_obj_content(json.loads(err))
 
+    logzero.json(False)
+    logzero.logger.info('info')
+    out, err = capsys.readouterr()
+    assert "] info" in err
+
 
 def test_json_logfile(capsys):
     # Test default logger

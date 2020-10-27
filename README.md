@@ -31,7 +31,6 @@ Features
 * Licensed under the MIT license.
 * Heavily inspired by the [Tornado web framework](https://github.com/tornadoweb/tornado).
 
-
 ![Demo output in color](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/demo_output.png)
 
 
