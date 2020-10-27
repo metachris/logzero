@@ -61,6 +61,17 @@ else:
     unicode_type = unicode  # noqa
     basestring_type = basestring  # noqa
 
+# Formatter defaults
+DEFAULT_FORMAT = '%(color)s[%(levelname)1.1s %(asctime)s %(module)s:%(lineno)d]%(end_color)s %(message)s'
+DEFAULT_DATE_FORMAT = '%y%m%d %H:%M:%S'
+DEFAULT_COLORS = {
+    logging.DEBUG: ForegroundColors.CYAN,
+    logging.INFO: ForegroundColors.GREEN,
+    logging.WARNING: ForegroundColors.YELLOW,
+    logging.ERROR: ForegroundColors.RED,
+    logging.CRITICAL: ForegroundColors.RED
+}
+
 # Name of the internal default logger
 LOGZERO_DEFAULT_LOGGER = "logzero_default"
 
@@ -84,7 +95,7 @@ if os.name == 'nt':
     colorama_init()
 
 
-def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False):
+def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False):
     """
     Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
@@ -109,9 +120,10 @@ def setup_logger(name=None, logfile=None, level=logging.DEBUG, formatter=None, m
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
     :arg int fileLoglevel: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ for the file logger (is not set, it will use the loglevel from the ``level`` argument)
     :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
+    :arg bool isRootLogger: If True then returns a root logger. Defaults to False. (see also the `Python docs <https://docs.python.org/3/library/logging.html#logging.getLogger>`_)
     :return: A fully configured Python logging `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_ you can use with ``.debug("msg")``, etc.
     """
-    _logger = logging.getLogger(name or __name__)
+    _logger = logging.getLogger(None if isRootLogger else name)
     _logger.propagate = False
 
     # set the minimum level needed for the logger itself (the lowest handler level)
@@ -162,15 +174,6 @@ class LogFormatter(logging.Formatter):
     * Timestamps on every log line.
     * Robust against str/bytes encoding problems.
     """
-    DEFAULT_FORMAT = '%(color)s[%(levelname)1.1s %(asctime)s %(module)s:%(lineno)d]%(end_color)s %(message)s'
-    DEFAULT_DATE_FORMAT = '%y%m%d %H:%M:%S'
-    DEFAULT_COLORS = {
-        logging.DEBUG: ForegroundColors.CYAN,
-        logging.INFO: ForegroundColors.GREEN,
-        logging.WARNING: ForegroundColors.YELLOW,
-        logging.ERROR: ForegroundColors.RED
-    }
-
     def __init__(self,
                  color=True,
                  fmt=DEFAULT_FORMAT,
