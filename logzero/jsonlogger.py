@@ -4,12 +4,20 @@ https://github.com/madzak/python-json-logger
 This library is provided to allow standard python logging
 to output log data as JSON formatted strings
 '''
+import sys
 import logging
 import json
 import re
-from datetime import date, datetime, time, timezone
 import traceback
 import importlib
+from datetime import date, datetime, time
+
+if sys.version_info >= (3, ):
+    from datetime import timezone
+    tz = timezone.utc
+else:
+    tz = None
+
 
 from inspect import istraceback
 
@@ -160,7 +168,7 @@ class JsonFormatter(logging.Formatter):
 
         if self.timestamp:
             key = self.timestamp if type(self.timestamp) == str else 'timestamp'
-            log_record[key] = datetime.fromtimestamp(record.created, tz=timezone.utc)
+            log_record[key] = datetime.fromtimestamp(record.created, tz=tz)
 
     def process_log_record(self, log_record):
         """
