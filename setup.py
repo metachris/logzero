@@ -13,7 +13,7 @@ with open('HISTORY.md') as history_file:
 
 setup(
     name='logzero',
-    version='1.6.1',
+    version='1.6.2',
     description="Robust and effective logging for Python 2 and 3",
     long_description=readme + '\n\n' + history,
     long_description_content_type='text/markdown',
