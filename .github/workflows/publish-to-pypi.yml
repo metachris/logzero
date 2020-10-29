@@ -1,11 +1,9 @@
 name: Publish Python 🐍  distributions 📦 to PyPI
 
-# on:
-#   push:
-#     tags:
-#       - v*
-
-on: push
+on:
+  push:
+    tags:
+      - v*
 
 jobs:
   release:
@@ -20,9 +18,9 @@ jobs:
 
       - name: Install dependencies
         run: pip install wheel
-
       - name: Build package
         run: python setup.py sdist bdist_wheel
+
       - name: Publish a Python distribution to PyPI
         uses: pypa/gh-action-pypi-publish@master
         with:
