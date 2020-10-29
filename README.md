@@ -226,7 +226,7 @@ $ make docs
 Changelog
 ---------
 
-See the changelog here: https://github.com/metachris/logzero/blob/master/HISTORY.rst
+See the changelog here: https://github.com/metachris/logzero/blob/master/HISTORY.md
 
 
 Feedback

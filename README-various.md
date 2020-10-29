@@ -3,19 +3,8 @@ Future Features & Ideas
 
 * Decorator for logging function calls
 * Easier usage of custom log handlers (currently works `like this <https://logzero.readthedocs.io/en/latest/#adding-custom-handlers-eg-sysloghandler>`_)
-* JSON output (a la 12 factor app)
 * Send logs to remote log collector (maybe)
 * Structured logging a la https://structlog.readthedocs.io/en/stable/index.html (maybe)
-
-
-TODO
-----
-
-* Travis CI: pypy3 gives error `RuntimeError: Python 3.3 or later is required` (see `job 255217329 <https://travis-ci.org/metachris/logzero/jobs/255217329>`_)
-* Tests
-
-  * Custom handlers and reconfiguration
-  * Strange behaviour: py.test with default logger - capturing err does not work if the logger is setup initially in logzero. Only works when setup from the py script.
 
 
 Related Projects
@@ -37,7 +26,6 @@ via https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checkli
     # Run the tests
     py.test
     make lint
-    tox
 
     # Update history
     vi HISTORY.rst
@@ -52,6 +40,7 @@ via https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checkli
 
 Update conda-forge: https://github.com/metachris/logzero/issues/67#issuecomment-353016366
 
+
 Credits
 ---------
 
@@ -62,4 +51,3 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 
 .. _pip: https://pip.pypa.io
-

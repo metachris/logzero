@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 with open('README.md') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
+with open('HISTORY.md') as history_file:
     history = history_file.read()
 
 setup(
@@ -16,6 +16,7 @@ setup(
     version='1.6.0',
     description="Robust and effective logging for Python 2 and 3",
     long_description=readme + '\n\n' + history,
+    long_description_content_type='text/markdown',
     author="Chris Hager",
     author_email='chris@linuxuser.at',
     url='https://github.com/metachris/logzero',
