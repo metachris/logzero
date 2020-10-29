@@ -9,6 +9,7 @@ History
 * Allow creating a root logger (`#342 <https://github.com/metachris/logzero/pull/342>`_)
 * Bugfix: file logging with lower loglevel than stream (`PR 338 <https://github.com/metachris/logzero/pull/338>`_)
 * Running tests with Python up to 3.9
+* Dependency updates
 
 
 1.5.0 (2018-03-07)
