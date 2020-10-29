@@ -2,6 +2,16 @@
 History
 =======
 
+1.6.0 (2020-10-29)
+------------------
+* JSON logging support (`PR 344 <https://github.com/metachris/logzero/pull/344>`_)
+* Ability to easily change colors (`#82 <https://github.com/metachris/logzero/issues/82>`_)
+* Allow creating a root logger (`#342 <https://github.com/metachris/logzero/pull/342>`_)
+* Bugfix: file logging with lower loglevel than stream (`PR 338 <https://github.com/metachris/logzero/pull/338>`_)
+* Running tests with Python up to 3.9
+* Dependency updates
+
+
 1.5.0 (2018-03-07)
 ------------------
 * ``logzero.syslog(..)`` (`PR 83 <https://github.com/metachris/logzero/pull/84>`_)

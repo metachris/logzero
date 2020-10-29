@@ -3,7 +3,6 @@
 ![Build status for master branch](https://github.com/metachris/logzero/workflows/Run%20the%20tests/badge.svg)
 [![Documentation Status](https://readthedocs.org/projects/logzero/badge/?version=latest)](https://logzero.readthedocs.io/en/latest/?badge=latest)
 [![Latest version on PyPi](https://img.shields.io/pypi/v/logzero.svg)](https://pypi.python.org/pypi/logzero)
-[![Updates](https://pyup.io/repos/github/metachris/logzero/shield.svg)](https://pyup.io/repos/github/metachris/logzero/)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/logzero/badges/version.svg)](https://anaconda.org/conda-forge/logzero)
 
 Robust and effective logging for Python 2 and 3.
