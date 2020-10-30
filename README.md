@@ -7,7 +7,7 @@
 
 Robust and effective logging for Python 2 and 3.
 
-![Logo](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/logo-small.png)
+![Logo](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/demo-output-with-beaver.png)
 
 * Documentation: https://logzero.readthedocs.io
 * GitHub: https://github.com/metachris/logzero
@@ -18,7 +18,7 @@ Features
 
 * Easy logging to console and/or (rotating) file.
 * Provides a fully configured standard [Python logger object](https://docs.python.org/2/library/logging.html#module-level-functions>).
-* JSON logging support (with integrated [python-json-logger](https://github.com/madzak/python-json-logger))
+* JSON logging (with integrated [python-json-logger](https://github.com/madzak/python-json-logger))
 * Pretty formatting, including level-specific colors in the console.
 * No dependencies
 * Windows color output supported by [colorama](https://github.com/tartley/colorama)
@@ -30,7 +30,7 @@ Features
 * Licensed under the MIT license.
 * Heavily inspired by the [Tornado web framework](https://github.com/tornadoweb/tornado).
 
-![Demo output in color](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/demo_output.png)
+<!-- ![Demo output in color](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/demo_output.png) -->
 
 
 Example Usage
@@ -49,54 +49,22 @@ try:
     raise Exception("this is a demo exception")
 except Exception as e:
     logger.exception(e)
-```
 
-Adding a rotating logfile is that easy:
-
-```python
+# JSON logging
 import logzero
-from logzero import logger
+logzero.json()
 
-# Setup rotating logfile with 3 rotations, each with a maximum filesize of 1MB:
-logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1e6, backupCount=3)
+logger.info("JSON test")
 
-# Log messages
-logger.info("This log message goes to the console and the logfile")
+# Start writing into a logfile
+logzero.logfile("/tmp/logzero-demo.log")
 ```
 
-Here are more examples which show how to use logfiles, custom formatters
-and setting a minimum loglevel:
+This is the output:
 
-```python
-import logging
-import logzero
-from logzero import logger
+![demo-output](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/demo-output-json.png)
 
-# This log message goes to the console
-logger.debug("hello")
-
-# Set a minimum log level
-logzero.loglevel(logging.INFO)
-
-# Set a logfile (all future log messages are also saved there)
-logzero.logfile("/tmp/logfile.log")
-
-# You can also set a different loglevel for the file handler
-logzero.logfile("/tmp/logfile.log", loglevel=logging.ERROR)
-
-# Set a rotating logfile (replaces the previous logfile handler)
-logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1000000, backupCount=3)
-
-# Disable logging to a file
-logzero.logfile(None)
-
-# Set a custom formatter
-formatter = logging.Formatter('%(name)s - %(asctime)-15s - %(levelname)s: %(message)s');
-logzero.formatter(formatter)
-
-# Log some variables
-logger.info("var1: %s, var2: %s", var1, var2)
-```
+Note: You can find more examples in the documentation: https://logzero.readthedocs.io
 
 ### JSON logging
 
@@ -132,23 +100,13 @@ The logged JSON object has these fields:
 }
 ```
 
-An exception logged with `logger.exception(e)` has these fields:
+Exceptions logged with `logger.exception(e)` have these additional JSON fields:
 
 ```json
 {
-  "asctime": "2020-10-21 10:43:25,193",
-  "filename": "test.py",
-  "funcName": "test_this",
   "levelname": "ERROR",
   "levelno": 40,
-  "lineno": 17,
-  "module": "test",
   "message": "this is a demo exception",
-  "name": "logzero",
-  "pathname": "_tests/test.py",
-  "process": 76192,
-  "processName": "MainProcess",
-  "threadName": "MainThread",
   "exc_info": "Traceback (most recent call last):\n  File \"_tests/test.py\", line 15, in test_this\n    raise Exception(\"this is a demo exception\")\nException: this is a demo exception"
 }
 ```
@@ -163,8 +121,18 @@ Installation
 
 Install `logzero` with [pip](https://pip.pypa.io):
 
+
 ```shell
-$ pip install -U logzero
+# Create and activate a virtualenv in ./venv/
+python3 -m venv venv
+. venv/bin/activate
+
+# Install logzero
+python -m pip install logzero
+
+# Download and run demo.py
+wget https://raw.githubusercontent.com/metachris/logzero/master/examples/demo.py
+python demo.py
 ```
 
 If you don't have [pip](https://pip.pypa.io) installed, this [Python installation guide](http://docs.python-guide.org/en/latest/starting/installation/) can guide
@@ -185,8 +153,6 @@ $ cd logzero
 $ python setup.py install
 ```
 
-On openSUSE you can install the current version from repos: [python2-logzero](https://software.opensuse.org/package/python2-logzero), [python3-logzero](https://software.opensuse.org/package/python3-logzero). In the newest openSUSE release you can install it with zypper: `sudo zypper in python2-logzero`.
-
 Contributors
 ------------
 
@@ -194,18 +160,12 @@ Contributors
 * [carlodr](https://github.com/carlodri)
 * [Brian Lenz](https://github.com/brianlenz)
 * [David Martin](https://github.com/dmartin35)
+* [Zakaria Zajac](madzak) (creator of [python-json-logger](https://github.com/madzak/python-json-logger))
 
 ---
 
 Development
 -----------
-
-**Notes**
-
-* Using pytest as test runner
-* CI is run with [Github actions](https://github.com/metachris/logzero/tree/master/.github/workflows).
-* Download stats: https://pepy.tech/project/logzero
-
 
 **Getting started**
 
@@ -228,6 +188,11 @@ $ make lint
 $ make docs
 ```
 
+**Notes**
+
+* `pytest` is the test runner
+* CI is run with [Github actions](https://github.com/metachris/logzero/tree/master/.github/workflows).
+* Download stats: https://pepy.tech/project/logzero
 
 ---
 
@@ -244,4 +209,4 @@ All kinds of feedback and contributions are welcome.
 
 * [Create an issue](https://github.com/metachris/logzero/issues/new>)
 * Create a pull request
-* [@metachris](https://twitter.com/metachris) // chris@linuxuser.at
+* [@metachris](https://twitter.com/metachris)
