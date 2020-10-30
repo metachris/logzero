@@ -7,9 +7,8 @@
 
 Robust and effective logging for Python 2 and 3.
 
-.. image:: _static/logo.png
+.. image:: _static/demo-output-with-beaver.png
    :alt: Logo
-   :width: 300px
 
 **Features**
 
@@ -26,11 +25,6 @@ Robust and effective logging for Python 2 and 3.
 * Licensed under the MIT license.
 * Heavily inspired by the `Tornado web framework`_.
 * Hosted on GitHub: https://github.com/metachris/logzero
-
-
-.. image:: _static/demo_output.png
-   :alt: Demo output in color
-   :width: 300px
 
 
 Installation
@@ -74,10 +68,9 @@ You can use `logzero` like this (logs only to the console by default):
 
     from logzero import logger
 
-    # These log messages are sent to the console
     logger.debug("hello")
     logger.info("info")
-    logger.warning("warning")
+    logger.warning("warn")
     logger.error("error")
 
     # This is how you'd log an exception
@@ -86,23 +79,19 @@ You can use `logzero` like this (logs only to the console by default):
     except Exception as e:
         logger.exception(e)
 
+    # JSON logging
+    import logzero
+    logzero.json()
+
+    logger.info("JSON test")
+
+    # Start writing into a logfile
+    logzero.logfile("/tmp/logzero-demo.log")
+
 If this was a file called ``demo.py``, the output will look like this:
 
-.. image:: _static/demo_output_with_exception.png
+.. image:: _static/demo-output-json.png
    :alt: Demo output in color
-
-.. code-block:: console
-
-    [D 170705 14:59:47 demo:3] hello
-    [I 170705 14:59:47 demo:4] info
-    [W 170705 14:59:47 demo:5] warn
-    [E 170705 14:59:47 demo:6] error
-    [E 170705 14:59:47 demo:12] this is a demo exception
-        Traceback (most recent call last):
-        File "demo.py", line 10, in <module>
-            raise Exception("this is a demo exception")
-        Exception: this is a demo exception
-
 
 Logging to files
 ----------------

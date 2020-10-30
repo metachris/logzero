@@ -30,8 +30,6 @@ Features
 * Licensed under the MIT license.
 * Heavily inspired by the [Tornado web framework](https://github.com/tornadoweb/tornado).
 
-<!-- ![Demo output in color](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/demo_output.png) -->
-
 
 Example Usage
 -------------
@@ -186,11 +184,14 @@ $ make lint
 
 # Generate the docs (will auto-open in Chrome)
 $ make docs
+
+# You can enable watching mode to automatically rebuild on changes:
+$ make servedocs
 ```
 
 **Notes**
 
-* `pytest` is the test runner
+* [pytest](https://docs.pytest.org/en/latest/) is the test runner
 * CI is run with [Github actions](https://github.com/metachris/logzero/tree/master/.github/workflows).
 * Download stats: https://pepy.tech/project/logzero
 
