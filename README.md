@@ -129,7 +129,8 @@ The logged JSON object has these fields:
   "process": 76204,
   "processName": "MainProcess",
   "threadName": "MainThread"
-}```
+}
+```
 
 An exception logged with `logger.exception(e)` has these:
 
@@ -149,7 +150,8 @@ An exception logged with `logger.exception(e)` has these:
   "processName": "MainProcess",
   "threadName": "MainThread",
   "exc_info": "Traceback (most recent call last):\n  File \"_tests/test.py\", line 15, in test_this\n    raise Exception(\"this is a demo exception\")\nException: this is a demo exception"
-}```
+}
+```
 
 Take a look at the documentation for more information and examples:
 
@@ -186,6 +188,15 @@ $ python setup.py install
 On openSUSE you can install the current version from repos: [python2-logzero](https://software.opensuse.org/package/python2-logzero), [python3-logzero](https://software.opensuse.org/package/python3-logzero). In the newest openSUSE release you can install it with zypper: `sudo zypper in python2-logzero`.
 
 
+Contributors
+------------
+
+* [Chris Hager](https://github.com/metachris)
+* [carlodr](https://github.com/carlodri)
+* [Brian Lenz](https://github.com/brianlenz)
+* [David Martin](https://github.com/dmartin35)
+
+
 Development
 -----------
 
@@ -194,6 +205,7 @@ Notes:
 * Using pytest as test runner
 * CI is run with [Github actions](https://github.com/metachris/logzero/tree/master/.github/workflows).
 * Download stats: https://pepy.tech/project/logzero
+
 
 ### Getting started
 
