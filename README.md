@@ -223,4 +223,4 @@ All kinds of feedback and contributions are welcome.
 * Create a pull request
 * [@metachris](https://twitter.com/metachris)
 
-![logo](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/logo.png | width=400)
+![logo](https://raw.githubusercontent.com/metachris/logzero/master/docs/_static/logo-420.png)
