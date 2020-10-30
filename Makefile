@@ -52,7 +52,7 @@ lint: ## check style with flake8
 
 test: ## run tests quickly with the default Python
 	py.test
-	
+
 
 test-all: ## run tests on every Python version with tox
 	tox
@@ -72,7 +72,7 @@ docs: ## generate Sphinx HTML documentation, including API docs
 	$(BROWSER) docs/_build/html/index.html
 
 servedocs: docs ## compile the docs watching for changes
-	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
+	watchmedo shell-command -p '*.rst;*.md' -c '$(MAKE) -C docs html' -R -D .
 
 release: clean ## package and upload a release
 	python setup.py sdist upload

@@ -10,6 +10,8 @@ import json
 import re
 import traceback
 import importlib
+from inspect import istraceback
+from collections import OrderedDict
 from datetime import date, datetime, time
 
 if sys.version_info >= (3, ):
@@ -18,10 +20,6 @@ if sys.version_info >= (3, ):
 else:
     tz = None
 
-
-from inspect import istraceback
-
-from collections import OrderedDict
 
 # skip natural LogRecord attributes
 # http://docs.python.org/library/logging.html#logrecord-attributes
