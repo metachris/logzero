@@ -187,7 +187,6 @@ $ python setup.py install
 
 On openSUSE you can install the current version from repos: [python2-logzero](https://software.opensuse.org/package/python2-logzero), [python3-logzero](https://software.opensuse.org/package/python3-logzero). In the newest openSUSE release you can install it with zypper: `sudo zypper in python2-logzero`.
 
-
 Contributors
 ------------
 
@@ -196,18 +195,19 @@ Contributors
 * [Brian Lenz](https://github.com/brianlenz)
 * [David Martin](https://github.com/dmartin35)
 
+---
 
 Development
 -----------
 
-Notes:
+**Notes**
 
 * Using pytest as test runner
 * CI is run with [Github actions](https://github.com/metachris/logzero/tree/master/.github/workflows).
 * Download stats: https://pepy.tech/project/logzero
 
 
-### Getting started
+**Getting started**
 
 ```shell
 # Activate virtualenv
@@ -227,10 +227,6 @@ $ make lint
 # Generate the docs (will auto-open in Chrome)
 $ make docs
 ```
-
-**To do**
-
-* CI to publish package to PyPI
 
 
 ---
