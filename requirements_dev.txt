@@ -1,9 +1,8 @@
-pytest==6.1.2
+pytest==4.6
 pytest-runner==5.2
 bumpversion==0.6.0
 watchdog==0.10.3
 flake8==3.8.4
 coverage==5.3
-tox==3.20.1
 cryptography==3.2.1
 Sphinx==3.2.1

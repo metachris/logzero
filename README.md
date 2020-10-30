@@ -189,6 +189,14 @@ $ make docs
 $ make servedocs
 ```
 
+To test with Python 2.7, you can use Docker:
+
+```shell
+docker run --rm -it -v /Users/chris/stream/logzero:/mnt python:2.7 /bin/bash
+```
+
+Now you have a shell with the current directory mounted into `/mnt/` inside the container.
+
 **Notes**
 
 * [pytest](https://docs.pytest.org/en/latest/) is the test runner
