@@ -168,6 +168,9 @@ Development
 **Getting started**
 
 ```shell
+$ git clone https://github.com/metachris/logzero.git
+$ cd logzero
+
 # Activate virtualenv
 $ python3 -m venv venv
 $ . venv/bin/activate
@@ -219,3 +222,5 @@ All kinds of feedback and contributions are welcome.
 * [Create an issue](https://github.com/metachris/logzero/issues/new>)
 * Create a pull request
 * [@metachris](https://twitter.com/metachris)
+
+♥️
