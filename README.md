@@ -219,7 +219,7 @@ Feedback
 
 All kinds of feedback and contributions are welcome.
 
-* [Create an issue](https://github.com/metachris/logzero/issues/new>)
+* [Create an issue](https://github.com/metachris/logzero/issues/new)
 * Create a pull request
 * [@metachris](https://twitter.com/metachris)
 
