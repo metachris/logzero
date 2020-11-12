@@ -58,3 +58,34 @@ def test_json_logfile(capsys):
 
     finally:
         temp.close()
+
+
+def test_json_encoding(capsys):
+    """
+    see logzero.json(json_ensure_ascii=True)
+    """
+    logzero.reset_default_logger()
+
+    # UTF-8 mode
+    logzero.json(json_ensure_ascii=False)
+    logzero.logger.info('ß')
+    out, err = capsys.readouterr()
+    json.loads(err)  # make sure JSON is valid
+    assert 'ß' in err
+    assert 'u00df' not in err
+
+    # ASCII mode
+    logzero.json(json_ensure_ascii=True)
+    logzero.logger.info('ß')
+    out, err = capsys.readouterr()
+    json.loads(err)  # make sure JSON is valid
+    assert 'u00df' in err
+    assert 'ß' not in err
+
+    # Default JSON mode should be utf-8
+    logzero.json()
+    logzero.logger.info('ß')
+    out, err = capsys.readouterr()
+    json.loads(err)  # make sure JSON is valid
+    assert 'ß' in err
+    assert 'u00df' not in err

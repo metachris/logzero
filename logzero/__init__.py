@@ -97,7 +97,7 @@ if os.name == 'nt':
     colorama_init()
 
 
-def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False, json=False):
+def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False, json=False, json_ensure_ascii=False):
     """
     Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
@@ -124,6 +124,7 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
     :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
     :arg bool isRootLogger: If True then returns a root logger. Defaults to False. (see also the `Python docs <https://docs.python.org/3/library/logging.html#logging.getLogger>`_).
     :arg bool json: If True then log in JSON format. Defaults to False. (uses `python-json-logger <https://github.com/madzak/python-json-logger>`_).
+    :arg bool json_ensure_ascii: Passed to json.dumps as `ensure_ascii`, default: False (if False: writes utf-8 characters, if True: ascii only representation of special characters - eg. '\u00d6\u00df')
     :return: A fully configured Python logging `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_ you can use with ``.debug("msg")``, etc.
     """
     _logger = logging.getLogger(None if isRootLogger else name)
@@ -134,7 +135,7 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
     _logger.setLevel(minLevel)
 
     # Setup default formatter
-    _formatter = _get_json_formatter() if json else formatter or LogFormatter()
+    _formatter = _get_json_formatter(json_ensure_ascii) if json else formatter or LogFormatter()
 
     # Reconfigure existing handlers
     stderr_stream_handler = None
@@ -487,15 +488,18 @@ def syslog(logger_to_update=logger, facility=SysLogHandler.LOG_USER, disableStde
     return syslog_handler
 
 
-def json(enable=True, update_custom_handlers=False):
+def json(enable=True, json_ensure_ascii=False, update_custom_handlers=False):
     """
     Enable/disable json logging for all handlers.
+
+    Params:
+    * json_ensure_ascii ... Passed to json.dumps as `ensure_ascii`, default: False (if False: writes utf-8 characters, if True: ascii only representation of special characters - eg. '\u00d6\u00df')
     """
 
-    formatter(_get_json_formatter() if enable else LogFormatter(), update_custom_handlers=update_custom_handlers)
+    formatter(_get_json_formatter(json_ensure_ascii) if enable else LogFormatter(), update_custom_handlers=update_custom_handlers)
 
 
-def _get_json_formatter():
+def _get_json_formatter(json_ensure_ascii):
     supported_keys = [
         'asctime',
         'filename',
@@ -515,7 +519,7 @@ def _get_json_formatter():
     def log_format(x):
         return ['%({0:s})s'.format(i) for i in x]
     custom_format = ' '.join(log_format(supported_keys))
-    return JsonFormatter(custom_format)
+    return JsonFormatter(custom_format, json_ensure_ascii=json_ensure_ascii)
 
 
 def log_function_call(func):

@@ -23,6 +23,13 @@ jobs:
           pip install -e .
           pip install -r requirements_dev.txt
 
+      - name: Reduce the tests for Python 2
+        run: |
+          if [[ $(python --version 2>&1) =~ 2\. ]]; then
+            echo "Remove python2 incompatible tests"
+            rm tests/test_json.py
+          fi
+
       - name: Run the tests
         run: make test
 
