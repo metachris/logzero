@@ -28,9 +28,9 @@ via https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checkli
     make lint
 
     # Update history
-    vi HISTORY.rst
-    git add HISTORY.rst
-    git commit -m "Changelog for upcoming release 0.1.1."
+    vi HISTORY.md
+    git add HISTORY.md
+    git commit -m "Changelog for upcoming release"
 
     # Update version
     bumpversion minor
