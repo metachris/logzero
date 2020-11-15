@@ -1,14 +1,14 @@
 History
 =======
 
-1.6.1 (2020-11-15)
+1.6.3 (2020-11-15)
 ------------------
 
 - JSON logging with UTF-8 enabled by default ([PR 357](https://github.com/metachris/logzero/pull/357))
 
 
-1.6.0 (2020-10-29)
-------------------
+1.6.0 (1.6.2) (2020-10-29)
+--------------------------
 
 -   JSON logging support ([PR 344][])
 -   Ability to easily change colors ([\#82][])
