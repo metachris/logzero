@@ -10,6 +10,7 @@ Future Features & Ideas
 Related Projects
 ----------------
 
+* [pinojs](https://github.com/pinojs/pino)
 * https://logbook.readthedocs.io/en/stable/index.html
 * https://12factor.net/logs
 * Log collectors: fluentd, logstash, etc.

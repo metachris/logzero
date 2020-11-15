@@ -4,6 +4,7 @@
 [![Documentation Status](https://readthedocs.org/projects/logzero/badge/?version=latest)](https://logzero.readthedocs.io/en/latest/?badge=latest)
 [![Latest version on PyPi](https://img.shields.io/pypi/v/logzero.svg)](https://pypi.python.org/pypi/logzero)
 [![Anaconda-Server Badge](https://anaconda.org/conda-forge/logzero/badges/version.svg)](https://anaconda.org/conda-forge/logzero)
+[![Downloads](https://pepy.tech/badge/logzero/week)](https://pepy.tech/project/logzero)
 
 Robust and effective logging for Python 2 and 3.
 
@@ -30,6 +31,12 @@ Features
 * Licensed under the MIT license.
 * Heavily inspired by the [Tornado web framework](https://github.com/tornadoweb/tornado).
 
+
+Installation:
+
+```shell
+python -m pip install logzero
+```
 
 Example Usage
 -------------
@@ -119,6 +126,11 @@ Installation
 
 Install `logzero` with [pip](https://pip.pypa.io):
 
+```shell
+python -m pip install logzero
+```
+
+Here's how you setup a virtualenv and download and run the demo:
 
 ```shell
 # Create and activate a virtualenv in ./venv/
