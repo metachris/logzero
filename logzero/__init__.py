@@ -42,6 +42,7 @@ from logzero.colors import Fore as ForegroundColors
 from logzero.jsonlogger import JsonFormatter
 
 from logging.handlers import RotatingFileHandler, SysLogHandler
+from logging import CRITICAL, ERROR, WARNING, WARN, INFO, DEBUG, NOTSET  # noqa: F401
 
 try:
     import curses  # type: ignore
@@ -326,7 +327,7 @@ def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None, maxB
     :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
     """
     global logger
-    logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=logfile, level=level, formatter=formatter, disableStderrLogger=disableStderrLogger)
+    logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=logfile, level=level, formatter=formatter, backupCount=backupCount, disableStderrLogger=disableStderrLogger)
     return logger
 
 
