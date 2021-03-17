@@ -281,7 +281,7 @@ This is how you add a `SocketHandler <https://docs.python.org/2/library/logging.
 
     # Setup the SocketHandler
     socket_handler = SocketHandler(address=('localhost', logging.DEFAULT_TCP_LOGGING_PORT))
-    socket_handler.setLevel(logging.DEBUG)
+    socket_handler.setLevel(logzero.DEBUG)
     socket_handler.setFormatter(logzero.LogFormatter(color=False))
 
     # Attach it to the logzero default logger
