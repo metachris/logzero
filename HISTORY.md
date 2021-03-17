@@ -1,6 +1,14 @@
 History
 =======
 
+1.6.5 (2021-03-17)
+------------------
+- Export loglevels directly (you can use eg. `logzero.DEBUG` instead of `logging.DEBUG`)
+- `setup_default_logger` use `backupCount`
+- Update dependencies
+- PRs: (386)[https://github.com/metachris/logzero/pull/386]
+
+
 1.6.3 (2020-11-15)
 ------------------
 

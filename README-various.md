@@ -25,7 +25,7 @@ via https://cookiecutter-pypackage.readthedocs.io/en/latest/pypi_release_checkli
 .. code-block:: console
 
     # Run the tests
-    py.test
+    make test
     make lint
 
     # Update history

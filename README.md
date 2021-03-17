@@ -63,6 +63,9 @@ logger.info("JSON test")
 
 # Start writing into a logfile
 logzero.logfile("/tmp/logzero-demo.log")
+
+# Set a minimum loglevel
+logzero.loglevel(logzero.WARNING)
 ```
 
 This is the output:

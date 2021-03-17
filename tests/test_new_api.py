@@ -8,8 +8,6 @@ Tests for `logzero` module.
 """
 import os
 import tempfile
-import logging
-
 import logzero
 
 
@@ -54,7 +52,7 @@ def test_api_loglevel(capsys):
     try:
         logzero.logfile(temp.name)
         logzero.logger.info("info1")
-        logzero.loglevel(logging.WARN)
+        logzero.loglevel(logzero.WARN)
         logzero.logger.info("info2")
         logzero.logger.warning("warn1")
 
@@ -79,7 +77,7 @@ def test_api_loglevel_custom_handlers(capsys):
     # try:
     #     logzero.logfile(temp.name)
     #     logzero.logger.info("info1")
-    #     logzero.loglevel(logging.WARN)
+    #     logzero.loglevel(logzero.WARN)
     #     logzero.logger.info("info2")
     #     logzero.logger.warning("warn1")
 
@@ -131,13 +129,13 @@ def test_api_logfile_custom_loglevel():
     temp = tempfile.NamedTemporaryFile()
     try:
         # Set logfile with custom loglevel
-        logzero.logfile(temp.name, loglevel=logging.WARN)
+        logzero.logfile(temp.name, loglevel=logzero.WARN)
         logzero.logger.info("info1")
         logzero.logger.warning("warn1")
 
         # If setting a loglevel with logzero.loglevel(..) it will not overwrite
         # the custom loglevel of the file handler
-        logzero.loglevel(logging.INFO)
+        logzero.loglevel(logzero.INFO)
         logzero.logger.info("info2")
         logzero.logger.warning("warn2")
 

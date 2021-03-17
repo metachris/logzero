@@ -29,7 +29,7 @@ If you want to use specific loggers instead of the global default logger, use
 
     logger = logzero.setup_logger(logfile="/tmp/test.log")
 
-The default loglevel is `logging.DEBUG`. You can set it with the
+The default loglevel is `DEBUG`. You can set it with the
 parameter `level`.
 
 See the documentation for more information: https://logzero.readthedocs.io
@@ -68,11 +68,11 @@ else:
 DEFAULT_FORMAT = '%(color)s[%(levelname)1.1s %(asctime)s %(module)s:%(lineno)d]%(end_color)s %(message)s'
 DEFAULT_DATE_FORMAT = '%y%m%d %H:%M:%S'
 DEFAULT_COLORS = {
-    logging.DEBUG: ForegroundColors.CYAN,
-    logging.INFO: ForegroundColors.GREEN,
-    logging.WARNING: ForegroundColors.YELLOW,
-    logging.ERROR: ForegroundColors.RED,
-    logging.CRITICAL: ForegroundColors.RED
+    DEBUG: ForegroundColors.CYAN,
+    INFO: ForegroundColors.GREEN,
+    WARNING: ForegroundColors.YELLOW,
+    ERROR: ForegroundColors.RED,
+    CRITICAL: ForegroundColors.RED
 }
 
 # Name of the internal default logger
@@ -88,7 +88,7 @@ LOGZERO_INTERNAL_HANDLER_IS_CUSTOM_LOGLEVEL = "_is_logzero_internal_handler_cust
 logger = None
 
 # Current state of the internal logging settings
-_loglevel = logging.DEBUG
+_loglevel = DEBUG
 _logfile = None
 _formatter = None
 
@@ -98,7 +98,7 @@ if os.name == 'nt':
     colorama_init()
 
 
-def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False, json=False, json_ensure_ascii=False):
+def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False, json=False, json_ensure_ascii=False):
     """
     Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
@@ -117,7 +117,7 @@ def setup_logger(name=__name__, logfile=None, level=logging.DEBUG, formatter=Non
 
     :arg string name: Name of the `Logger object <https://docs.python.org/2/library/logging.html#logger-objects>`_. Multiple calls to ``setup_logger()`` with the same name will always return a reference to the same Logger object. (default: ``__name__``)
     :arg string logfile: If set, also write logs to the specified filename.
-    :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: ``logging.DEBUG``).
+    :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: ``DEBUG``).
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
     :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
@@ -305,7 +305,7 @@ def _safe_unicode(s):
         return repr(s)
 
 
-def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None, maxBytes=0, backupCount=0, disableStderrLogger=False):
+def setup_default_logger(logfile=None, level=DEBUG, formatter=None, maxBytes=0, backupCount=0, disableStderrLogger=False):
     """
     Deprecated. Use `logzero.loglevel(..)`, `logzero.logfile(..)`, etc.
 
@@ -316,11 +316,11 @@ def setup_default_logger(logfile=None, level=logging.DEBUG, formatter=None, maxB
     .. code-block:: python
 
         from logzero import logger, setup_default_logger
-        setup_default_logger(level=logging.WARN)
+        setup_default_logger(level=WARN)
         logger.info("hello")  # this will not be displayed anymore because minimum loglevel was set to WARN
 
     :arg string logfile: If set, also write logs to the specified filename.
-    :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `logging.DEBUG`).
+    :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `DEBUG`).
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
     :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
@@ -339,7 +339,7 @@ def reset_default_logger():
     global _loglevel
     global _logfile
     global _formatter
-    _loglevel = logging.DEBUG
+    _loglevel = DEBUG
     _logfile = None
     _formatter = None
 
@@ -356,14 +356,14 @@ def reset_default_logger():
 reset_default_logger()
 
 
-def loglevel(level=logging.DEBUG, update_custom_handlers=False):
+def loglevel(level=DEBUG, update_custom_handlers=False):
     """
     Set the minimum loglevel for the default logger (`logzero.logger`) and all handlers.
 
     This reconfigures only the internal handlers of the default logger (eg. stream and logfile).
     You can also update the loglevel for custom handlers by using `update_custom_handlers=True`.
 
-    :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `logging.DEBUG`).
+    :arg int level: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ to display (default: `DEBUG`).
     :arg bool update_custom_handlers: If you added custom handlers to this logger and want this to update them too, you need to set `update_custom_handlers` to `True`
     """
     logger.setLevel(level)

@@ -64,7 +64,7 @@ def test_loglevel():
     logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
-        logger = logzero.setup_logger(logfile=temp.name, level=logging.INFO)
+        logger = logzero.setup_logger(logfile=temp.name, level=logzero.INFO)
         logger.debug("test log output")
 
         with open(temp.name) as f:
@@ -152,14 +152,14 @@ def test_default_logger(disableStdErrorLogger=False):
         logzero.logger.debug("debug1")  # will be logged
 
         # Reconfigure with loglevel INFO
-        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO, disableStderrLogger=disableStdErrorLogger)
+        logzero.setup_default_logger(logfile=temp.name, level=logzero.INFO, disableStderrLogger=disableStdErrorLogger)
         logzero.logger.debug("debug2")  # will not be logged
         logzero.logger.info("info1")  # will be logged
 
         # Reconfigure with a different formatter
         log_format = '%(color)s[xxx]%(end_color)s %(message)s'
         formatter = logzero.LogFormatter(fmt=log_format)
-        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO, formatter=formatter, disableStderrLogger=disableStdErrorLogger)
+        logzero.setup_default_logger(logfile=temp.name, level=logzero.INFO, formatter=formatter, disableStderrLogger=disableStdErrorLogger)
 
         logzero.logger.info("info2")  # will be logged with new formatter
         logzero.logger.debug("debug3")  # will not be logged
@@ -192,7 +192,7 @@ def test_setup_logger_reconfiguration():
 
         # Add a custom file handler
         filehandler = logging.FileHandler(temp2.name)
-        filehandler.setLevel(logging.DEBUG)
+        filehandler.setLevel(logzero.DEBUG)
         filehandler.setFormatter(logzero.LogFormatter(color=False))
         logzero.logger.addHandler(filehandler)
 
@@ -208,12 +208,12 @@ def test_setup_logger_reconfiguration():
         logzero.logger.debug("debug3")
 
         # Reconfigure logger to set minimum loglevel to INFO
-        logzero.setup_default_logger(logfile=temp.name, level=logging.INFO)
+        logzero.setup_default_logger(logfile=temp.name, level=logzero.INFO)
         logzero.logger.debug("debug4")
         logzero.logger.info("info1")
 
         # Reconfigure logger to set minimum loglevel back to DEBUG
-        logzero.setup_default_logger(logfile=temp.name, level=logging.DEBUG)
+        logzero.setup_default_logger(logfile=temp.name, level=logzero.DEBUG)
         logzero.logger.debug("debug5")
 
         with open(temp.name) as f:
@@ -245,7 +245,7 @@ def test_setup_logger_logfile_custom_loglevel(capsys):
     logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
-        logger = logzero.setup_logger(logfile=temp.name, fileLoglevel=logging.WARN)
+        logger = logzero.setup_logger(logfile=temp.name, fileLoglevel=logzero.WARN)
         logger.info("info1")
         logger.warning("warn1")
 
@@ -306,8 +306,8 @@ def test_logfile_lower_loglevel(capsys):
     logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
     try:
-        logzero.loglevel(level=logging.INFO)
-        logzero.logfile(temp.name, loglevel=logging.DEBUG)
+        logzero.loglevel(level=logzero.INFO)
+        logzero.logfile(temp.name, loglevel=logzero.DEBUG)
 
         logzero.logger.debug("debug")
         logzero.logger.info("info")
@@ -327,7 +327,7 @@ def test_logfile_lower_loglevel_setup_logger(capsys):
     """
     temp = tempfile.NamedTemporaryFile()
     try:
-        logger = logzero.setup_logger(level=logging.INFO, logfile=temp.name, fileLoglevel=logging.DEBUG)
+        logger = logzero.setup_logger(level=logzero.INFO, logfile=temp.name, fileLoglevel=logzero.DEBUG)
         logger.debug("debug")
         logger.info("info")
         with open(temp.name) as f:

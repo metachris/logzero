@@ -204,7 +204,7 @@ and setting a minimum loglevel.
     logger.debug("hello")
 
     # Set a minimum log level
-    logzero.loglevel(logging.INFO)
+    logzero.loglevel(logzero.INFO)
 
     # Set a logfile (all future log messages are also saved there)
     logzero.logfile("/tmp/logfile.log")
@@ -213,7 +213,7 @@ and setting a minimum loglevel.
     logzero.logfile("/tmp/logfile.log", disableStderrLogger=True)
 
     # You can also set a different loglevel for the file handler
-    logzero.logfile("/tmp/logfile.log", loglevel=logging.ERROR)
+    logzero.logfile("/tmp/logfile.log", loglevel=logzero.ERROR)
 
     # Set a rotating logfile (replaces the previous logfile handler)
     logzero.logfile("/tmp/rotating-logfile.log", maxBytes=1000000, backupCount=3)
@@ -249,8 +249,8 @@ Instead of using the default logger you can also setup specific logger instances
 
     from logzero import setup_logger
     logger1 = setup_logger(name="mylogger1")
-    logger2 = setup_logger(name="mylogger2", logfile="/tmp/test-logger2.log", level=logging.INFO)
-    logger3 = setup_logger(name="mylogger3", logfile="/tmp/test-logger3.log", level=logging.INFO, disableStderrLogger=True)
+    logger2 = setup_logger(name="mylogger2", logfile="/tmp/test-logger2.log", level=logzero.INFO)
+    logger3 = setup_logger(name="mylogger3", logfile="/tmp/test-logger3.log", level=logzero.INFO, disableStderrLogger=True)
 
     # Log something:
     logger1.info("info for logger 1")
