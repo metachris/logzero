@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
       - uses: actions/checkout@v2
@@ -18,17 +18,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sed -i 's/Sphinx.*//g' requirements_dev.txt
           pip install --upgrade pip
           pip install -e .
           pip install -r requirements_dev.txt
-
-      - name: Reduce the tests for Python 2
-        run: |
-          if [[ $(python --version 2>&1) =~ 2\. ]]; then
-            echo "Remove python2 incompatible tests"
-            rm tests/test_json.py
-          fi
 
       - name: Run the tests
         run: make test
