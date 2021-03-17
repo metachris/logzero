@@ -1,7 +1,7 @@
 History
 =======
 
-1.6.5 (2021-03-17)
+1.7.0 (2021-03-17)
 ------------------
 - Export loglevels directly (you can use eg. `logzero.DEBUG` instead of `logging.DEBUG`)
 - `setup_default_logger` use `backupCount`
