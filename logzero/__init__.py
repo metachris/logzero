@@ -67,6 +67,7 @@ else:
 # Formatter defaults
 DEFAULT_FORMAT = '%(color)s[%(levelname)1.1s %(asctime)s %(module)s:%(lineno)d]%(end_color)s %(message)s'
 DEFAULT_DATE_FORMAT = '%y%m%d %H:%M:%S'
+DEFAULT_FILE_ENCODING = "utf-8"
 DEFAULT_COLORS = {
     DEBUG: ForegroundColors.CYAN,
     INFO: ForegroundColors.GREEN,
@@ -98,7 +99,7 @@ if os.name == 'nt':
     colorama_init()
 
 
-def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False, json=False, json_ensure_ascii=False):
+def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False, json=False, json_ensure_ascii=False, encoding=DEFAULT_FILE_ENCODING):
     """
     Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
@@ -166,7 +167,7 @@ def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBy
         _logger.addHandler(stderr_stream_handler)
 
     if logfile:
-        rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
+        rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount, encoding=encoding)
         setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         rotating_filehandler.setLevel(fileLoglevel or level)
         rotating_filehandler.setFormatter(_formatter)
