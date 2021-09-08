@@ -169,6 +169,16 @@ def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBy
         rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
         setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         rotating_filehandler.setLevel(fileLoglevel or level)
+        
+        # Disable color writing to files if default LogFormatter type is used
+        if isinstance(_formatter, LogFormatter):
+            _formatter = LogFormatter(
+                color=False,
+                fmt=_formatter._fmt,
+                datefmt=_formatter.datefmt,
+                colors=_formatter._colors
+                )
+        
         rotating_filehandler.setFormatter(_formatter)
         _logger.addHandler(rotating_filehandler)
 
