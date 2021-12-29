@@ -175,6 +175,9 @@ def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBy
         _logger.addHandler(std_stream_handler)
 
     if logfile:
+        # Create the folder for holding the logfile, if it doesn't already exist
+        Path(logfile).parent.mkdir(parents=True, exist_ok=True)
+        
         rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
         setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         rotating_filehandler.setLevel(fileLoglevel or level)
