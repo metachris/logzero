@@ -35,15 +35,16 @@ parameter `level`.
 See the documentation for more information: https://logzero.readthedocs.io
 """
 import functools
+import logging
 import os
 import sys
-import logging
+from datetime import datetime
+from logging import CRITICAL, DEBUG, ERROR, INFO, NOTSET, WARN, WARNING  # noqa: F401
+from logging.handlers import RotatingFileHandler, SysLogHandler
+
 from logzero.colors import Fore as ForegroundColors
 from logzero.jsonlogger import JsonFormatter
 from pathlib import Path
-
-from logging.handlers import RotatingFileHandler, SysLogHandler
-from logging import CRITICAL, ERROR, WARNING, WARN, INFO, DEBUG, NOTSET  # noqa: F401
 
 try:
     import curses  # type: ignore
@@ -198,23 +199,26 @@ class LogFormatter(logging.Formatter):
                  color=True,
                  fmt=DEFAULT_FORMAT,
                  datefmt=DEFAULT_DATE_FORMAT,
-                 colors=DEFAULT_COLORS):
+                 colors=DEFAULT_COLORS,
+                 syslog_levels=False):
         r"""
         :arg bool color: Enables color support.
         :arg string fmt: Log message format.
           It will be applied to the attributes dict of log records. The
           text between ``%(color)s`` and ``%(end_color)s`` will be colored
           depending on the level if color support is on.
-        :arg dict colors: color mappings from logging level to terminal color
-          code
         :arg string datefmt: Datetime format.
           Used for formatting ``(asctime)`` placeholder in ``prefix_fmt``.
+        :arg dict colors: color mappings from logging level to terminal color
+          code
+        :arg bool syslog_levels: Whether to log in the syslog severity level schema.
         .. versionchanged:: 3.2
            Added ``fmt`` and ``datefmt`` arguments.
         """
         logging.Formatter.__init__(self, datefmt=datefmt)
 
         self._fmt = fmt
+        self._syslog_levels = syslog_levels
         self._colors = {}
         self._normal = ''
 
@@ -255,6 +259,9 @@ class LogFormatter(logging.Formatter):
         else:
             record.color = record.end_color = ''
 
+        if self._syslog_levels:
+            record = self._convert_to_syslog_severity_level(record)
+
         formatted = self._fmt % record.__dict__
 
         if record.exc_info:
@@ -269,6 +276,42 @@ class LogFormatter(logging.Formatter):
                 _safe_unicode(ln) for ln in record.exc_text.split('\n'))
             formatted = '\n'.join(lines)
         return formatted.replace("\n", "\n    ")
+
+    def _convert_to_syslog_severity_level(self, record: logging.LogRecord):
+        """
+        Borrowed from https://github.com/Azure-Samples/iotedge-logging-and-monitoring-solution/blob/2bd90e21ffe1394bdbb38f8932cbc78c8c836aa1/EdgeSolution/modules/PythonSampleLogs/CustomLogger.py.
+
+        Convert pythong logging log levels to syslog standard. You can compare both using the following links:
+        https://en.wikipedia.org/wiki/Syslog#Severity_level
+        https://docs.python.org/3/howto/logging.html#logging-levels
+        """
+        if record.levelno == logging.DEBUG:
+            record.levelno = 7
+            record.levelname = "DBG"
+        if record.levelno == logging.INFO:
+            record.levelno = 6
+            record.levelname = "INF"
+        if record.levelno == logging.WARNING:
+            record.levelno = 4
+            record.levelname = "WRN"
+        if record.levelno == logging.ERROR:
+            record.levelno = 3
+            record.levelname = "ERR"
+        if record.levelno == logging.CRITICAL:
+            record.levelno = 2
+            record.levelname = "CRIT"
+
+        return record
+
+    def formatTime(self, record, datefmt=None, timespec="milliseconds"):
+        if datefmt in ("iso", "azure"):
+            dt = datetime.fromtimestamp(record.created, tz=datetime.now().astimezone().tzinfo)
+            s = dt.isoformat(" ", timespec=timespec)
+            if datefmt == "azure":
+                s = s.replace("+", " +")
+        else:
+            s = super().formatTime(record, datefmt)
+        return s
 
 
 def _stderr_supports_color():
