@@ -153,7 +153,7 @@ def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBy
                 _logger.removeHandler(handler)
                 continue
             elif isinstance(handler, logging.StreamHandler):
-                if log_stream is None or log_stream not in std_stream_handler.stream.name:
+                if log_stream is None or (std_stream_handler and log_stream not in std_stream_handler.stream.name):
                     # remove the std handler (stream_handler) if disabled, or if there is a stream(err/out) mismatch
                     _logger.removeHandler(handler)
                     continue
