@@ -40,6 +40,7 @@ import sys
 import logging
 from logzero.colors import Fore as ForegroundColors
 from logzero.jsonlogger import JsonFormatter
+from pathlib import Path
 
 from logging.handlers import RotatingFileHandler, SysLogHandler
 from logging import CRITICAL, ERROR, WARNING, WARN, INFO, DEBUG, NOTSET  # noqa: F401
@@ -166,6 +167,9 @@ def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBy
         _logger.addHandler(stderr_stream_handler)
 
     if logfile:
+        # Create the folder for holding the logfile, if it doesn't already exist
+        Path(logfile).parent.mkdir(parents=True, exist_ok=True)
+        
         rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
         setattr(rotating_filehandler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
         rotating_filehandler.setLevel(fileLoglevel or level)
@@ -435,6 +439,9 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
     # If no filename supplied, all is done
     if not filename:
         return
+
+    # Create the folder for holding the logfile, if it doesn't already exist
+    Path(filename).parent.mkdir(parents=True, exist_ok=True)
 
     # Now add
     rotating_filehandler = RotatingFileHandler(filename, mode=mode, maxBytes=maxBytes, backupCount=backupCount, encoding=encoding)

@@ -19,6 +19,7 @@ Robust and effective logging for Python 2 and 3.
 * Windows color output supported by `colorama`_
 * Robust against str/bytes encoding problems, works with all kinds of character encodings and special characters.
 * Multiple loggers can write to the same logfile (also works across multiple Python files).
+* Any directory structured mentioned is automatically created, if it doesn't exist.
 * Global default logger with `logzero.logger <#i-logzero-logger>`_ and custom loggers with `logzero.setup_logger(..) <#i-logzero-setup-logger>`_.
 * Compatible with Python 2 and 3.
 * All contained in a `single file`_.

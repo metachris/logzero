@@ -9,6 +9,7 @@ Tests for `logzero` module.
 import os
 import tempfile
 import logging
+from pathlib import Path
 
 import logzero
 
@@ -20,8 +21,25 @@ def test_write_to_logfile_and_stderr(capsys):
     logzero.reset_default_logger()
     temp = tempfile.NamedTemporaryFile()
 
+    # Try creating a logfile
     try:
         logger = logzero.setup_logger('test_write_to_logfile_and_stderr', logfile=temp.name)
+        logger.info("test log output")
+
+        _out, err = capsys.readouterr()
+        assert " test_logzero:" in err
+        assert err.endswith("test log output\n")
+
+        with open(temp.name) as f:
+            content = f.read()
+            assert " test_logzero:" in content
+            assert content.endswith("test log output\n")
+    finally:
+        temp.close()
+    
+    # Try creating a logfile along with the required parent folder
+    try:
+        logger = logzero.setup_logger('test_write_to_logfile_and_stderr', logfile=Path(f"{temp.name}_folder")/Path(temp.name).name)
         logger.info("test log output")
 
         _out, err = capsys.readouterr()
