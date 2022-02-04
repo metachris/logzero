@@ -98,7 +98,7 @@ if os.name == 'nt':
     colorama_init()
 
 
-def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, disableStderrLogger=False, isRootLogger=False, json=False, json_ensure_ascii=False):
+def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBytes=0, backupCount=0, fileLoglevel=None, log_stream='stderr', isRootLogger=False, json=False, json_ensure_ascii=False):
     """
     Configures and returns a fully configured logger instance, no hassles.
     If a logger with the specified name already exists, it returns the existing instance,
@@ -122,7 +122,7 @@ def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBy
     :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
     :arg int fileLoglevel: Minimum `logging-level <https://docs.python.org/2/library/logging.html#logging-levels>`_ for the file logger (is not set, it will use the loglevel from the ``level`` argument)
-    :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
+    :arg string log_stream: Which standard stream should the log output go to. Can take values of `stderr`, `stdout` or `None`. Defaults to `stderr`.
     :arg bool isRootLogger: If True then returns a root logger. Defaults to False. (see also the `Python docs <https://docs.python.org/3/library/logging.html#logging.getLogger>`_).
     :arg bool json: If True then log in JSON format. Defaults to False. (uses `python-json-logger <https://github.com/madzak/python-json-logger>`_).
     :arg bool json_ensure_ascii: Passed to json.dumps as `ensure_ascii`, default: False (if False: writes utf-8 characters, if True: ascii only representation of special characters - eg. '\u00d6\u00df')
@@ -138,8 +138,13 @@ def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBy
     # Setup default formatter
     _formatter = _get_json_formatter(json_ensure_ascii) if json else formatter or LogFormatter()
 
+    # Ensure the log stream passed by user is valid.
+    if log_stream not in ("stderr", "stdout", None):
+        _logger.warning("Log stream must be one of `'stderr'`, `'stdout'` or `None`. Using `'stderr'`")
+        log_stream = "stderr"
+
     # Reconfigure existing handlers
-    stderr_stream_handler = None
+    std_stream_handler = None
     for handler in list(_logger.handlers):
         if hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
             if isinstance(handler, logging.FileHandler):
@@ -148,22 +153,25 @@ def setup_logger(name=__name__, logfile=None, level=DEBUG, formatter=None, maxBy
                 _logger.removeHandler(handler)
                 continue
             elif isinstance(handler, logging.StreamHandler):
-                stderr_stream_handler = handler
+                if log_stream is None or (std_stream_handler and log_stream not in std_stream_handler.stream.name):
+                    # remove the std handler (stream_handler) if disabled, or if there is a stream(err/out) mismatch
+                    _logger.removeHandler(handler)
+                    continue
+                else:
+                    # Else, this is the stderr/stdout stream that we need to reconfigure
+                    std_stream_handler = handler
 
         # reconfigure handler
         handler.setLevel(level)
         handler.setFormatter(_formatter)
 
-    # remove the stderr handler (stream_handler) if disabled
-    if disableStderrLogger:
-        if stderr_stream_handler is not None:
-            _logger.removeHandler(stderr_stream_handler)
-    elif stderr_stream_handler is None:
-        stderr_stream_handler = logging.StreamHandler()
-        setattr(stderr_stream_handler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
-        stderr_stream_handler.setLevel(level)
-        stderr_stream_handler.setFormatter(_formatter)
-        _logger.addHandler(stderr_stream_handler)
+    if log_stream is not None and std_stream_handler is None:
+        # This is the block that will be entered for the default logger (ex: `from logzero import logger`)
+        std_stream_handler = logging.StreamHandler(stream=getattr(sys, log_stream))
+        setattr(std_stream_handler, LOGZERO_INTERNAL_LOGGER_ATTR, True)
+        std_stream_handler.setLevel(level)
+        std_stream_handler.setFormatter(_formatter)
+        _logger.addHandler(std_stream_handler)
 
     if logfile:
         rotating_filehandler = RotatingFileHandler(filename=logfile, maxBytes=maxBytes, backupCount=backupCount)
@@ -305,7 +313,7 @@ def _safe_unicode(s):
         return repr(s)
 
 
-def setup_default_logger(logfile=None, level=DEBUG, formatter=None, maxBytes=0, backupCount=0, disableStderrLogger=False):
+def setup_default_logger(logfile=None, level=DEBUG, formatter=None, maxBytes=0, backupCount=0, log_stream='stderr'):
     """
     Deprecated. Use `logzero.loglevel(..)`, `logzero.logfile(..)`, etc.
 
@@ -324,10 +332,10 @@ def setup_default_logger(logfile=None, level=DEBUG, formatter=None, maxBytes=0, 
     :arg Formatter formatter: `Python logging Formatter object <https://docs.python.org/2/library/logging.html#formatter-objects>`_ (by default uses the internal LogFormatter).
     :arg int maxBytes: Size of the logfile when rollover should occur. Defaults to 0, rollover never occurs.
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
-    :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
+    :arg string log_stream: Which standard stream should the log output go to. Can take values of `stderr`, `stdout` or `None`. Defaults to `stderr`.
     """
     global logger
-    logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=logfile, level=level, formatter=formatter, backupCount=backupCount, disableStderrLogger=disableStderrLogger)
+    logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=logfile, level=level, formatter=formatter, backupCount=backupCount, log_stream=log_stream)
     return logger
 
 
@@ -350,10 +358,6 @@ def reset_default_logger():
 
     # Resetup
     logger = setup_logger(name=LOGZERO_DEFAULT_LOGGER, logfile=_logfile, level=_loglevel, formatter=_formatter)
-
-
-# Initially setup the default logger
-reset_default_logger()
 
 
 def loglevel(level=DEBUG, update_custom_handlers=False):
@@ -403,7 +407,7 @@ def formatter(formatter, update_custom_handlers=False):
     _formatter = formatter
 
 
-def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encoding=None, loglevel=None, disableStderrLogger=False):
+def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encoding=None, loglevel=None, disable_stream_loggers=False):
     """
     Setup logging to file (using a `RotatingFileHandler <https://docs.python.org/2/library/logging.handlers.html#rotatingfilehandler>`_ internally).
 
@@ -427,10 +431,10 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
     :arg int backupCount: Number of backups to keep. Defaults to 0, rollover never occurs.
     :arg string encoding: Used to open the file with that encoding.
     :arg int loglevel: Set a custom loglevel for the file logger, else uses the current global loglevel.
-    :arg bool disableStderrLogger: Should the default stderr logger be disabled. Defaults to False.
+    :arg bool disable_stream_loggers: should the default stream loggers(stderr/stdout) be disabled? defaults to `True`
     """
     # First, remove any existing file logger
-    __remove_internal_loggers(logger, disableStderrLogger)
+    __remove_internal_loggers(logger, disable_stream_loggers)
 
     # If no filename supplied, all is done
     if not filename:
@@ -455,11 +459,11 @@ def logfile(filename, formatter=None, mode='a', maxBytes=0, backupCount=0, encod
         logger.setLevel(loglevel)
 
 
-def __remove_internal_loggers(logger_to_update, disableStderrLogger=True):
+def __remove_internal_loggers(logger_to_update, disable_stream_loggers=True):
     """
-    Remove the internal loggers (e.g. stderr logger and file logger) from the specific logger
+    Remove the internal loggers (e.g. stderr/stdout logger and file logger) from the specific logger
     :param logger_to_update: the logger to remove internal loggers from
-    :param disableStderrLogger: should the default stderr logger be disabled? defaults to True
+    :param disable_stream_loggers: should the default stream loggers(stderr/stdout) be disabled? defaults to `True`
     """
     for handler in list(logger_to_update.handlers):
         if hasattr(handler, LOGZERO_INTERNAL_LOGGER_ATTR):
@@ -467,20 +471,20 @@ def __remove_internal_loggers(logger_to_update, disableStderrLogger=True):
                 logger_to_update.removeHandler(handler)
             elif isinstance(handler, SysLogHandler):
                 logger_to_update.removeHandler(handler)
-            elif isinstance(handler, logging.StreamHandler) and disableStderrLogger:
+            elif isinstance(handler, logging.StreamHandler) and disable_stream_loggers:
                 logger_to_update.removeHandler(handler)
 
 
-def syslog(logger_to_update=logger, facility=SysLogHandler.LOG_USER, disableStderrLogger=True):
+def syslog(logger_to_update=logger, facility=SysLogHandler.LOG_USER, disable_stream_loggers=True):
     """
     Setup logging to syslog and disable other internal loggers
     :param logger_to_update: the logger to enable syslog logging for
     :param facility: syslog facility to log to
-    :param disableStderrLogger: should the default stderr logger be disabled? defaults to True
+    :param disable_stream_loggers: should the default stream loggers(stderr/stdout) be disabled? defaults to `True`
     :return the new SysLogHandler, which can be modified externally (e.g. for custom log level)
     """
     # remove internal loggers
-    __remove_internal_loggers(logger_to_update, disableStderrLogger)
+    __remove_internal_loggers(logger_to_update, disable_stream_loggers)
 
     # Setup logzero to only use the syslog handler with the specified facility
     syslog_handler = SysLogHandler(facility=facility)
@@ -536,6 +540,9 @@ def log_function_call(func):
         return func(*args, **kwargs)
     return wrap
 
+
+# Initially setup the default logger
+reset_default_logger()
 
 if __name__ == "__main__":
     _logger = setup_logger()
