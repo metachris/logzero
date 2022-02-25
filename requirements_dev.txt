@@ -1,5 +1,5 @@
 pytest==4.6  # pyup: ignore
-pytest-runner==5.2
+pytest-runner==5.3.2
 bumpversion==0.6.0
 watchdog==0.10.3
 flake8==3.8.4
